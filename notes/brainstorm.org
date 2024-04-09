@@ -1,0 +1,100 @@
+#+title: Notes
+
+* Papers to read
+- [ ] https://www.nature.com/articles/s42256-023-00753-y
+- [X] LanguageBind: Extending video-language pretraining to N-modality by language based semantic alignment
+- [ ] Kell, A. J., Yamins, D. L., Shook, E. N., Norman-Haignere, S. V., & McDermott, J. H. (2018). A task-optimized neural network replicates human auditory behavior, predicts brain responses, and reveals a cortical processing hierarchy. Neuron, 98(3), 630-644.
+- [ ] <next> Kell, A. J., & McDermott, J. H. (2019). Deep neural network models of sensory systems: windows onto the role of task constraints. Current opinion in neurobiology, 55, 121-132.
+- [ ]  Goldstein, A., Zada, Z., Buchnik, E., Schain, M., Price, A., Aubrey, B., ... & Hasson, U. (2022). Shared computational principles for language processing in humans and deep language models. Nature neuroscience, 25(3), 369-380.
+- [X] <next> Schrimpf, M., Blank, I. A., Tuckute, G., Kauf, C., Hosseini, E. A., Kanwisher, N., ... & Fedorenko, E. (2021). The neural architecture of language: Integrative modeling converges on predictive processing. Proceedings of the National Academy of Sciences, 118(45), e2105646118.
+- [X] Huth, A. G., De Heer, W. A., Griffiths, T. L., Theunissen, F. E., & Gallant, J. L. (2016). Natural speech reveals the semantic maps that tile human cerebral cortex. Nature, 532(7600), 453-458.
+(preprints)
+- [X] <next> Kumar, S., Sumers, T. R., Yamakoshi, T., Goldstein, A., Hasson, U., Norman, K. A., ... & Nastase, S. A. (2022). Reconstructing the cascade of language processing in the brain using the internal computations of a transformer-based language model. bioRxiv.
+- [X] Millet, J., Caucheteux, C., Orhan, P., Boubenec, Y., Gramfort, A., Dunbar, E., ... & King, J. R. (2022). Toward a realistic model of speech processing in the brain with self-supervised learning. arXiv preprint arXiv:2206.01685.
+- [ ] Vaidya, A. R., Jain, S., & Huth, A. G. (2022). Self-supervised models of audio effectively explain human cortical responses to speech. arXiv preprint arXiv:2205.14252.
+- [ ] Toneva, M., & Wehbe, L. (2019). Interpreting and improving natural-language processing (in machines) with natural language-processing (in the brain). Advances in Neural Information Processing Systems, 32.
+- [ ] Tuckute, G., Feather, J., Boebinger, D., & McDermott, J. H. (2022). Many but not all deep neural network audio models capture brain responses and exhibit hierarchical region correspondence. bioRxiv.  (in company with Kell 2019 & 2018)
+- [ ] Murphy, E., Forseth, K. J., Donos, C., Rollo, P. S., & Tandon, N. (2022). The spatiotemporal dynamics of semantic integration in the human brain. bioRxiv.
+- [ ] <next> Li, Y., Anumanchipalli, G. K., Mohamed, A., Lu, J., Wu, J., & Chang, E. F. (2022). Dissecting neural computations of the human auditory pathway using deep neural networks for speech. bioRxiv, 2022-03.
+
+* Basic Idea
+exploring "concept space" for the human brain.
+- insight: wildly multimodal models can actually outperform tasks fine-tuned to individual tasks. is it possible that the "concept space" is exactly intelligence?
+- examine "concept space" representations in same person in different "mindsets"
+-
+
+* Paper Notes
+** 1
+*** Basic info
+- Title: The neural architecture of language: Integrative modeling converges on predictive processing
+*** Notes
+- About: comparing architectures and their ability to predict explainable variance in recordings
+
+** 2 (!)
+*** Basic info
+- Title: Natural speech reveals the semantic maps that tile human cerebral cortex
+
+*** Notes
+- About: mapping semantics onto the cortex using word embedding as the concept space
+** 3 (!)
+*** Basic info
+- Reconstructing the cascade of language processing in the brain using the internal computations of a transformer-based language model. bioRxiv.
+- Title: Shared functional specialization in transformer-based language models and the human brain
+
+*** Notes
+- About: mapping functions (attention heads) in BERT onto the brain
+
+** 4
+*** Basic info
+- Title: Toward a realistic model of speech processing in the brain with self-supervised learning
+
+
+*** Notes
+- About: mapping wav2vec onto the brain
+
+** 5
+*** Basic info
+- Title: The spatiotemporal dynamics of semantic integration in the human brain
+
+*** Notes
+-
+** 6
+*** Basic info
+- Title: Better models of human high-level visual cortex emerge from natural language supervision with a large and diverse dataset
+*** Notes
+-
+
+** 7
+*** Basic info
+- Title: A Task-Optimized Neural Network Replicates Human Auditory Behavior, Predicts Brain Responses, and Reveals a Cortical Processing Hierarchy
+*** Notes
+- Encoding analysis
+-
+
+
+* Ideas
+** dump
+- communication efficiency
+# - fmri foundation model
+# - data cleaning for fMRI
+# - language and thinking
+- pronoun resolotion in the brain (using the listening dataset)
+- why AI can't do maths
+
+** AI Maths
+- LLM vs humans, do tasks of maths
+- encoding analysis between the two
+** Computational Linguistics
+- pronoun resolution
+- semantic pragmatic distinction
+- word sense disambiguation
+-
+
+
+* Questions
+- in paper 6 and many other papers, so what?
+- explain R^2 = xx of variance
+-
+
+* My Topic
+Examining representations of numbers and

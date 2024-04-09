@@ -1,0 +1,46 @@
+#+title: Numbers
+
+* Dump
+- [ ] compare neural representation of AI and brains doing 1 digit multiplication and multi-digit multiplication. Hypothesize that 1 digit should be similar while multi-digit should be wildly different
+- [ ] representation of each digit in the brain
+- [ ] representation of each digit in AI
+- [ ] representation of multiplication in the brain
+- explore Abstraction in human brains! insights from category theory
+
+
+* Dataset
+- https://www.nature.com/articles/sdata201940: children, 132/63 participants, 2 year dev, mult and sub, localizer, standardized tests
+- https://behavioralandbrainfunctions.biomedcentral.com/articles/10.1186/s12993-022-00186-4: algebra vs. arithmatics
+- https://openneuro.org/datasets/ds004791/versions/1.0.0
+- https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495
+** Algebra
+- 30 undergrad
+- not publically availible
+-
+** DD
+- 68 children
+- age: 9
+- 36 problems per run (12 per condition)
+- Arithmetic, Matching,VSWM
+- T1w
+
+* Questions
+- report: what I have, or more?
+
+* Report 0
+- 人脑的数字认知：对数字表示和基本算术的探索
+- Numerical Cognition in the Human Brain: An Exploration of Number Representations and Basic Arithmetic.
+** 研究背景与意义
+- What it is about:
+- Connections with AI:
+- Connections with Diseases:
+数字认知是人类基本认知能力的重要组成部分，关乎我们的日常生活和基础学习。通过功能磁共振成像(fMRI)数据，探索人脑中数字和基本算术的表示，有助于揭示人脑处理和理解数字的机理，对教育、心理学、疾病治疗甚至人工智能的发展都有深远影响。
+
+了解发展性计算障碍（DD）的神经生物学基础对于研究人脑对数字的认知具有重要意义。DD是一种数学学习障碍，表现为在基本数字处理、心算和视觉空间工作记忆等方面的困难。通过研究DD儿童与正常发育儿童之间的大脑功能差异，我们可以更深入地了解人脑对数字的认知和处理机制。
+
+在这一研究中，我们使用了一份涵盖了68名儿童（8-10岁，其中30名为DD儿童）的功能磁共振成像（fMRI）数据。该数据旨在调查DD儿童常见行为缺陷相关的功能神经解剖学差异，包括基本数字处理、心算和视觉空间工作记忆（VSWM）。通过分析这些数据，我们可以更深入地了解人脑对数字的认知方式。
+
+** 主要内容及目标
+采用Kwok et al., 2023, Human Brain Mapping中发表的数据集作为主要实验数据集。首先对数据进行基本处理分析，确定ROI。随后针对数字匹配任务对不同的ROI训练分类器，以探索人脑是否存在对于10以下数字的细分表示。对于小数加法及大数加法、数字匹配及形状匹配任务分别训练定位器，以尝试发掘两者激活脑区的相同和不同。
+** 研究进度安排
+

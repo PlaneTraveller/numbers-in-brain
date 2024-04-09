@@ -1,0 +1,13 @@
+#+title: Readme
+
+* Construction Site
+A project exploring number and algebra representations in the human brain using fMRI data.
+
+** Dataset
+- https://openneuro.org/datasets/ds004791/versions/1.0.0
+- https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495
+- 68 children
+- age avg: 9
+- 36 problems per run (12 per condition)
+- Task: Arithmetic, Matching, VSWM
+- Modality: T1w
