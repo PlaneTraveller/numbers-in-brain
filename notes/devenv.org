@@ -1,0 +1,18 @@
+#+title: Develop environment
+
+* Temporary solution
+
+#+begin_src bash
+python -m venv ./.venv
+source ./.venv/bin/activate
+pip install -r requirements.txt
+#+end_src
+- =requirements.txt=
+- [[https://github.com/MordragT/nix-templates/blob/master/python-venv/flake.nix][python-venv template]]
+
+#+begin_src nix
+LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+#+end_src
+
+* Resources
+- https://github.com/gjz010/nix-channel/blob/main/pkgs/python3WithLD/default.nix

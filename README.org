@@ -5,9 +5,84 @@ A project exploring number and algebra representations in the human brain using 
 
 ** Dataset
 - https://openneuro.org/datasets/ds004791/versions/1.0.0
+- https://osf.io/y763r/
 - https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495
 - 68 children
 - age avg: 9
 - 36 problems per run (12 per condition)
 - Task: Arithmetic, Matching, VSWM
 - Modality: T1w
+
+** Task Stack
+- [ ] do classification task on individual numbers
+- [ ] data-wrangling
+- [X] download dataset
+- [X] create dev env using flake, =shell.nix=
+- [X] pyenv
+- [ ] ROI extraction
+- [ ] pair fmri response with task onset info, see it move
+- [ ] see a brain, any brain
+- [ ] load it in!
+- [ ] read py mri course
+- [X] grasp data structure, content, dimensions
+- [X] how is it processed?
+
+* Data Structure
+** Subject
+- DD/TA
+*** anat
++ t1w json
+  - F/M
+  - Age
+  - Size
++ t1w nii
+*** func
+**** Task
++ block design
+  - initial (6500) & end (12000)
+  - each block: 6 trials
+  - jittered ITI avg 1500
+  - latin square counterbalancing
+  - interblock interval: avg 9
++ arithmetic
+  - investigate arithmetic problem solving
+  - 3 condition (small number, big number, plus one)
+  - 36 problems (12 per condition)
+  - non 0
++ matching
+  - basic number processing
+  - primary semantic representation of numerical magnitudes
+  - 3 condition (number-dots, shapes, faces)
+  - 2 blocks
+  - 18 problems (6 trials per condition)
++ vswm
+  - 2 condition (press regardless, press if true)
+  - 2 loads (3, 5)
+  - 24 problems (6 trials per condition per load)
+
+***** runs
+- 2 runs
+****** types
++ bold json
++ bold nii
++ events tsv
+  - onset
+  - duration
+  - type
+  - response time
+  - correct
+  - task content
+  - verification
+* Preprocessing
+- fMRIPrep 1.4.1
+- Data S1
+- structural: normalized to MNI
+- etc.
+
+* Tools
+- [[https://bids.neuroimaging.io/][BIDS]]
+- [[https://bids-standard.github.io/pybids/][pybids]]
+- [[https://github.com/bids-standard/bids-examples][bids-examples]]
+- Fieldtrip, SPM, EEGLAB, MNE-Python and BrainStorm developers
+- [[https://andysbrainbook.readthedocs.io/en/latest/fMRI_Short_Course/fMRI_03_LookingAtTheData.html][fMRI short course]]
+- [[https://carpentries-incubator.github.io/SDC-BIDS-fMRI/04-integrating_functional_data.html][python fMRI course]]

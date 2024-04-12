@@ -1,4 +1,3 @@
-
-openneuro-py
-mne-bids
 mne
+mne-bids
+openneuro-py
