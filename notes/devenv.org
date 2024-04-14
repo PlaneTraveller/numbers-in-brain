@@ -14,5 +14,18 @@ pip install -r requirements.txt
 LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
 #+end_src
 
+* Using fmriprep
+#+begin_src shell
+pip install fmriprep-docker
+sudo fmriprep-docker ../dataset/ds004791/ ../dataset/out/ participant --fs-license-file ../freesurfer/license.txt
+#+end_src
+
+- in my system config
+#+begin_src nix
+virtualisation.docker.enable = true;
+#+end_src
+
+Set FS_LICENSE environment variable to a text file in root dir.
+
 * Resources
 - https://github.com/gjz010/nix-channel/blob/main/pkgs/python3WithLD/default.nix

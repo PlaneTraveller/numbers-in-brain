@@ -14,16 +14,23 @@ A project exploring number and algebra representations in the human brain using 
 - Modality: T1w
 
 ** Task Stack
-- [ ] do classification task on individual numbers
+- [ ] do classification task on individual numbers (?)
+- [ ] pair fmri response with task onset info, see it move
 - [ ] data-wrangling
 - [X] download dataset
 - [X] create dev env using flake, =shell.nix=
 - [X] pyenv
 - [ ] ROI extraction
-- [ ] pair fmri response with task onset info, see it move
-- [ ] see a brain, any brain
-- [ ] load it in!
-- [ ] read py mri course
+- [ ] add responses from the same number together, print the 10 numbers
+- [ ] use fmriprep to normalize
+- [X] see a brain, any brain
+- [X] load it in!
+- [X] read py mri course
+- [X] determine if it's preprocessed
+- [X] understand mask
+- [X] determine the structure of functional and structural data
+- [X] load it in and print it out
+- [X] get familiar with bids accessing
 - [X] grasp data structure, content, dimensions
 - [X] how is it processed?
 
@@ -83,6 +90,6 @@ A project exploring number and algebra representations in the human brain using 
 - [[https://bids.neuroimaging.io/][BIDS]]
 - [[https://bids-standard.github.io/pybids/][pybids]]
 - [[https://github.com/bids-standard/bids-examples][bids-examples]]
-- Fieldtrip, SPM, EEGLAB, MNE-Python and BrainStorm developers
+- Fieldtrip, SPM, EEGLAB, MNE-Python and BrainStorm
 - [[https://andysbrainbook.readthedocs.io/en/latest/fMRI_Short_Course/fMRI_03_LookingAtTheData.html][fMRI short course]]
 - [[https://carpentries-incubator.github.io/SDC-BIDS-fMRI/04-integrating_functional_data.html][python fMRI course]]

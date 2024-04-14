@@ -1,3 +1,6 @@
 mne
 mne-bids
 openneuro-py
+pybids
+matplotlib
+nilearn

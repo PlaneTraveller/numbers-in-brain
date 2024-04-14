@@ -24,9 +24,13 @@
             # Those are dependencies that we would like to use from nixpkgs, which will
             # add them to PYTHONPATH and thus make them accessible from within the venv.
             pythonPackages.numpy
+
+            pkgs.docker
           ];
 
           LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+          # FS_LICENSE = "../freesurfer/license.txt";
+          # shellHook = "";
 
           # Run this command, only after creating the virtual environment
           postVenvCreation = ''
@@ -39,6 +43,11 @@
           postShellHook = ''
             # allow pip to install wheels
             unset SOURCE_DATE_EPOCH
+
+            echo "========================================================="
+            echo "Welcome to the devenv! Happy Coding!"
+            echo "========================================================="
+            exec fish
           '';
         };
       });
