@@ -20,12 +20,112 @@ pip install fmriprep-docker
 sudo fmriprep-docker ../dataset/ds004791/ ../dataset/out/ participant --fs-license-file ../freesurfer/license.txt
 #+end_src
 
+For single participant timing:
+#+begin_src shell
+time sudo fmriprep-docker ../dataset/ds004791/ ../dataset/out/ participant --fs-license-file ../freesurfer/license.txt --omp-nthreads 8 --low-mem --participant-label 0011 --write-graph --notrack
+#+end_src
+
+time sudo fmriprep-docker ../dataset/ds004791/ ../dataset/test/ participant --fs-license-file ../freesurfer/license.txt --omp-nthreads 8 --low-mem --participant-label 0192 --write-graph --notrack
+
+
+For multiple subjects
+#+begin_src shell
+time sudo fmriprep-docker ../dataset/ds004791/ ../dataset/out/ participant --fs-license-file ../freesurfer/license.txt --omp-nthreads 8 --low-mem --participant-label 0102 0161 0165 0179 --write-graph --notrack
+#+end_src
+
+time sudo fmriprep-docker ../dataset/ds004791/ ../dataset/out/ participant --fs-license-file ../freesurfer/license.txt --omp-nthreads 8 --low-mem --participant-label  1197 --write-graph --notrack
+
+
+Mass run:
+#+begin_src shell
+time sudo fmriprep-docker ../dataset/ds004791/ ../dataset/out/ participant --fs-license-file ../freesurfer/license.txt --omp-nthreads 8 --low-mem --write-graph --notrack
+#+end_src
+
 - in my system config
 #+begin_src nix
 virtualisation.docker.enable = true;
 #+end_src
 
 Set FS_LICENSE environment variable to a text file in root dir.
+* Moving events
+#+begin_src bash
+rsync --dry-run -azhP ./ds004791/ ./out/derivatives/ --include='*events.tsv' --include='*/'  --exclude='*'
+#+end_src
+
 
 * Resources
 - https://github.com/gjz010/nix-channel/blob/main/pkgs/python3WithLD/default.nix
+
+* subject list
+0011
+0102
+0161
+0165
+0179
+0192
+0196
+0214
+0221
+0222
+0230
+0232
+0245
+0247
+0248
+0259
+0261
+0268
+0277
+0283
+0290
+0297
+0341
+0343
+0344
+0384
+0409
+0421
+0456
+0468
+0477
+0479
+0487
+0500
+0549
+0578
+0600
+0646
+0654
+0766
+0799
+0844
+0854
+0904
+0946
+0961
+0989
+1003
+1042
+1085
+1100
+1101
+1102
+1115
+1123
+1148
+1197
+1200
+1202
+1273
+1300
+1302
+1324
+1344
+1412
+1471
+1508
+1532
+* Error list
+Preprocessing did not finish successfully. Errors occurred while processing data from participants:
+
+0477 (1), 0844 (33), 0854 (21), 0904 (2), 0946 (1), 0961 (2), 0989 (2), 1003 (2), 1042 (2), 1085 (2), 1100 (2), 1101 (2), 1102 (2), 1115 (2), 1123 (2), 1148 (2), 1197 (2), 1200 (2), 1202 (2), 1273 (2), 1300 (2), 1302 (2), 1324 (2), 1344 (2), 1412 (2), 1471 (2), 1508 (2), 1532 (2).

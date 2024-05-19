@@ -4,3 +4,10 @@ openneuro-py
 pybids
 matplotlib
 nilearn
+fmriprep-docker
+nltools
+pandas
+nibabel
+
+
+seaborn

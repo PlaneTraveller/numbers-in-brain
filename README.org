@@ -4,6 +4,9 @@
 A project exploring number and algebra representations in the human brain using fMRI data.
 
 ** Dataset
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 - https://openneuro.org/datasets/ds004791/versions/1.0.0
 - https://osf.io/y763r/
 - https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495
@@ -12,17 +15,53 @@ A project exploring number and algebra representations in the human brain using 
 - 36 problems per run (12 per condition)
 - Task: Arithmetic, Matching, VSWM
 - Modality: T1w
+-
 
 ** Task Stack
-- [ ] do classification task on individual numbers (?)
-- [ ] pair fmri response with task onset info, see it move
-- [ ] data-wrangling
+- [ ] do classification task on individual numbers (?) (whole brain data)
+- [X] pair fmri response with task onset info, see it move
+- [X] data-wrangling
 - [X] download dataset
 - [X] create dev env using flake, =shell.nix=
 - [X] pyenv
-- [ ] ROI extraction
-- [ ] add responses from the same number together, print the 10 numbers
-- [ ] use fmriprep to normalize
+- [X] ROI extraction
+- [ ] begin group analysis (classifiers) (prereqs?)
+- [ ] ask about design mat choice
+- [ ] build & clarify abstraction of design matrices (+clean up notebook format)
+- [ ] train level 1 glm using ~trial_type~ as design mat
+- [ ] add smoothing
+- [X] add in noise covariates (head motion corr)
+- [X] add responses from the same number together, print the 10 numbers
+- [X] use task to index data
+- [X] write indexing wheels acc. pipeline
+- [X] try preliminary processing task to know the interfaces
+- [X] what group level to do? use GPT's answer
+- [X] figure out the statistical tools needed to test the hypothesis
+- [X] learn GLM to translate the topic into mathematical languages
+- [X] organize possible analysis for asking
+- [X] find an arbitrary analysis to do
+- [X] train trial wise glm, use that as feature, linear classifier
+- [X] migrate to pure py env.
+- [X] find a proper material for the depth of learning
+- [X] what statistical tests do I need to run? form a question for PI
+- [X] Understand the basics (read dartbrain)
+- [X] get to know the single-subject models (recursive reading) [[https://dartbrains.org/content/Group_Analysis.html][Group Analysis]]
+- [X] what analysis will I run? (GLM Decoding model, binary classification model)
+- [X] what is the hypothesis? (different number groups are represented in different brain regions) (It is possible to decode number from trials)
+- [X] find way to obtain feedback like nix! (possible sol: write helper functions, classes: try collect!)
+- [X] survey the interfaces/existing wheels
+- [X] how to do the data processing
+- [X] figure out what data processing?
+- [X] what to search (wheels)
+- [X] read docs and tutorial for popular packages (nilearn, pandas, numpy, torch?)
+- [X] find an example (huze)
+- [X] find an example to follow (NMA)
+- [X] go thru the tutorial
+- [X] explore fmriprep output structure
+- [X] bids standard
+- [X] use derivative
+- [X] rebuild structure
+- [X] use fmriprep to normalize
 - [X] see a brain, any brain
 - [X] load it in!
 - [X] read py mri course
@@ -35,6 +74,9 @@ A project exploring number and algebra representations in the human brain using 
 - [X] how is it processed?
 
 * Data Structure
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 ** Subject
 - DD/TA
 *** anat
@@ -80,16 +122,72 @@ A project exploring number and algebra representations in the human brain using 
   - correct
   - task content
   - verification
+
 * Preprocessing
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
 - fMRIPrep 1.4.1
 - Data S1
 - structural: normalized to MNI
 - etc.
+- fsl
 
-* Tools
+* Tools & tutorials
 - [[https://bids.neuroimaging.io/][BIDS]]
 - [[https://bids-standard.github.io/pybids/][pybids]]
 - [[https://github.com/bids-standard/bids-examples][bids-examples]]
 - Fieldtrip, SPM, EEGLAB, MNE-Python and BrainStorm
 - [[https://andysbrainbook.readthedocs.io/en/latest/fMRI_Short_Course/fMRI_03_LookingAtTheData.html][fMRI short course]]
 - [[https://carpentries-incubator.github.io/SDC-BIDS-fMRI/04-integrating_functional_data.html][python fMRI course]]
+- https://www.jneurolab.org/fmriprep-bids
+- [[https://lightrun.com/answers/bids-standard-pybids--bidsentityerror-get_events-cant-be-called-because-events-isnt-a-recognized-entity-name][get events]]
+- [[https://dartbrains.org/content/Introduction_to_Neuroimaging_Data.html][Dartbrains (dartmouth college)]]
+- [[https://gin.g-node.org/ljchang/Localizer][Dartbrains data]]
+- [[https://neurolibre.org/][Neurolibre: preprint server for reproducible data analysis]]
+- [[https://neurohackademy.org/neurohack_year/2020/][Neurohackademy]]
+- reddit
+- [[https://neurovault.org][Neurovault (ROI masks), nltools]]
+- [[https://neurostars.org][Neurostars forum]]
+
+* Example Projects
+- [[https://github.com/huzeyann/MemoryEncodingModel/tree/main][huze]]
+
+* Packages
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+- nilearn
+- nibabel
+- https://nipy.org/
+- Nipype
+
+
+* Tolearn
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+- affine transformation
+- GLM
+
+
+* Q
+- Should I do neural decoding on number representations.
+- What statistical model should I use? Binary or mlp level
+- ~1000 trials. enough?
+- Data in entire timeseries or choose one volumn
+
+
+
+* Goals
+- representation difference of different algebraic tasks between LLMs and humans
+- number representations
+- other stuff with the existing data (DD&TA?)
+-
+
+* Analysis
+** 1.
+- single subject first-level model
+- model each subject: predict activation in single voxel over scanning session
+- different brain regions in processing aspects (regressors that model different brain processes)
+-

@@ -1,0 +1,482 @@
+#+title: Wrangle
+#+PROPERTY: header-args:python    :results output :session mysession :tangle wrangle.py
+
+* Data Loading
+#+begin_src python
+#!/usr/bin/env python3
+
+import bids
+from nilearn import image as nimg
+from nilearn import plotting as nplot
+import seaborn as sns
+
+# from bids import BIDSValidator
+import matplotlib
+import matplotlib.pyplot as plt
+
+import numpy as np
+import pandas as pd
+
+from nltools.file_reader import onsets_to_dm
+from nltools.stats import regress, zscore
+from nltools.data import Brain_Data, Design_Matrix
+from nltools.stats import find_spikes
+from nilearn.plotting import view_img, glass_brain, plot_stat_map
+
+import nibabel as nib
+
+data_dir = "../dataset/ds004791"
+# processed_dir = "../dataset/out"
+img_dir = "./img"
+
+# =============================================================
+# == Loading data
+# l = bids.BIDSLayout(data_dir)
+l = bids.BIDSLayout(data_dir, derivatives=True, config=["bids", "derivatives"])
+
+#+end_src
+
+#+RESULTS[ba51679c94d0a6b609fa38f7f95bb6f1e2b4bc41]:
+
+* Testing
+#+NAME: play
+#+begin_src python
+
+test_sub = "0011"
+test_task = "matching"
+test_run = 1
+proc_space = "MNI152NLin2009cAsym"
+
+
+def play():
+    func_data = l.get(
+        datatype="func",
+        subject=test_sub,
+        task=test_task,
+        run=test_run,
+        desc="preproc",
+        extension=".nii.gz",
+    )
+
+    # Can use suffix to get events
+    events_data = l.get(
+        datatype="func", subject=test_sub, task=test_task, run=test_run, suffix="events"
+    )[0]
+
+    events_df = events_data.get_df()
+
+    print(events_df.to_string())
+
+    func_img = nimg.load_img(func_data)
+    print(func_img.shape)
+    # (84, 84, 48, 309)
+    # preprocessed: (63, 77, 66, 309)
+
+    func_vol5 = func_img.slicer[:, :, :, 4]
+    view = nplot.view_img(func_vol5, threshold=3)
+    view.open_in_browser()
+
+
+# play()
+
+
+#+end_src
+
+#+RESULTS: play
+
+
+* Functions
+
+#+NAME: events2dm
+#+begin_src python
+def events2dm(l, subj, task, run):
+    tr = l.get_tr()
+    data_file = l.get(
+        scope="raw",
+        datatype="func",
+        subject=subj,
+        task=task,
+        run=run,
+        suffix="bold",
+        extension=".nii.gz",
+        return_type="file",
+    )[0]
+    data = nib.load(data_file)
+    n_tr = data.shape[-1]
+    # print(n_tr)
+
+    events_file = l.get(
+        scope="raw",
+        datatype="func",
+        subject=subj,
+        task=task,
+        run=run,
+        suffix="events",
+        extension=".tsv",
+    )[0]
+
+    events = events_file.get_df()
+    # print(events.columns)
+    # ['onset', 'duration', 'trial_type', 'response_time', 'correct', 'left_stim', 'right_stim', 'correct_response']
+    dm_design = events[["onset", "duration", "trial_type"]]
+    dm_design.columns = ["Onset", "Duration", "Stim"]
+    return onsets_to_dm(dm_design, 1 / tr, n_tr)
+#+end_src
+
+#+RESULTS: events2dm
+
+#+RESULTS:
+
+* Playground
+
+#+begin_src python
+# =============================================================
+# == Data indexing playground
+
+image_dir = "./img/"
+test_sub = "0011"
+test_task = "matching"
+test_run = 1
+proc_space = "MNI152NLin2009cAsym"
+
+test_dm = events2dm(l, "0011", "matching", 1)
+print(test_dm.head())
+
+f, a = plt.subplots(figsize=(10, 5))
+
+# Design matrix
+test_dm.plot(ax=a)
+
+fname = image_dir + 'design_mat.png'
+plt.savefig(fname)
+plt.close()
+
+
+# Heatmap
+test_dm.heatmap()
+plt.savefig(image_dir + 'design_heatmap.png')
+plt.close()
+
+# Heatmap after HRFconvolution
+test_dm_convolve = test_dm.convolve()
+test_dm_convolve.heatmap()
+plt.savefig(image_dir + 'design_heatmap_conv.png')
+plt.close()
+
+f, a = plt.subplots(figsize=(10, 5))
+test_dm_convolve.plot(ax=a)
+plt.savefig(image_dir + 'design_conv.png')
+plt.close()
+
+#+end_src
+
+#+RESULTS:
+:    NumberMatching  FaceMatching  ShapeMatching
+: 0             0.0           0.0            0.0
+: 1             0.0           0.0            0.0
+: 2             0.0           0.0            0.0
+: 3             0.0           0.0            0.0
+: 4             0.0           0.0            0.0
+
+* Multicollinearity
+
+#+begin_src python :tangle no
+sns.heatmap(test_dm_convolve.corr(), vmin=-1, vmax=1, cmap='RdBu_r')
+plt.savefig(image_dir + 'dm_corr.png')
+plt.close()
+
+# plt.plot(test_dm_convolve.columns, test_dm_convolve.vif(), linewidth=3)
+print(test_dm_convolve.vif())
+plt.xsticks(rotation=90)
+plt.ylabel('Variance Inflation Factor')
+plt.savefig(image_dir + 'dm_vif.png')
+plt.close()
+
+
+#+end_src
+
+#+RESULTS:
+: [1.15388995 1.14700809 1.14196166]
+
+
+* Filtering
+#+begin_src python
+dm_conv_filt = test_dm_convolve.add_dct_basis(duration=128)
+# print(dm_conv_filt)
+dm_conv_filt.iloc[:,3:].plot()
+
+plt.savefig(image_dir + 'dm_filt.png')
+plt.close()
+
+dm_conv_filt.heatmap()
+plt.savefig(image_dir + 'dm_filt_heat.png')
+plt.close()
+
+dm_conv_filt_poly = dm_conv_filt.add_poly(order=2, include_lower=True)
+# print(dm_conv_filt_poly.head())
+dm_conv_filt_poly.heatmap()
+plt.savefig(image_dir + 'dm_poly.png')
+plt.close()
+#+end_src
+
+#+RESULTS:
+
+* Noice Covariates
+Remove variance associated with head motion: preprocessed data has realigned TR in space, but head motion can nonlinearly distort magnetic field.
+
+[[https://dartbrains.org/content/GLM_Single_Subject_Model.html][Noise Covariates strats]]
+
+adds 24 additional regressors
+
+#+begin_src python
+subj = "0011"
+task = "matching"
+run = 1
+covariates = l.get(
+    scope="derivatives",
+    datatype="func",
+    subject=subj,
+    task=task,
+    run=run,
+    desc="confounds",
+    extension="tsv",
+)[0].get_df()
+
+mc = covariates[['trans_x','trans_y','trans_z','rot_x', 'rot_y', 'rot_z']]
+
+plt.figure(figsize=(15, 5))
+plt.plot(zscore(mc))
+plt.savefig(image_dir + 'motion_corr')
+plt.close()
+
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python
+def make_motion_covariates(mc, tr):
+    z_mc = zscore(mc)
+    all_mc = pd.concat([z_mc, z_mc**2, z_mc.diff(), z_mc.diff()**2], axis=1)
+    all_mc.fillna(value=0, inplace=True)
+    return Design_Matrix(all_mc, sampling_freq=1/tr)
+
+tr = l.get_tr()
+mc_cov = make_motion_covariates(mc, tr)
+
+sns.heatmap(mc_cov)
+plt.savefig(image_dir + 'mc_cov')
+plt.close()
+
+#+end_src
+
+#+RESULTS:
+
+Average signal intensity across all voxels over time:
+#+begin_src python
+test_data = Brain_Data(l.get(
+    scope="derivatives",
+    datatype="func",
+    subject=subj,
+    task=task,
+    run=run,
+    suffix='bold',
+    extension='nii.gz',
+    return_type='file'
+))
+
+plt.figure(figsize=(15,3))
+plt.plot(np.mean(test_data.data, axis=1), linewidth=3)
+plt.xlabel('Time', fontsize=18)
+plt.ylabel('Intensity', fontsize=18)
+
+plt.savefig(image_dir + 'sig_intensity')
+plt.close()
+#+end_src
+
+#+RESULTS:
+: /home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nilearn/maskers/nifti_masker.py:110: UserWarning: imgs are being resampled to the mask_img resolution. This process is memory intensive. You might want to provide a target_affine that is equal to the affine of the imgs or resample the mask beforehand to save memory and computation time.
+:   warnings.warn(
+
+Find spikes
+#+begin_src python
+spikes = test_data.find_spikes(global_spike_cutoff=2.5, diff_spike_cutoff=2.5)
+
+f, a = plt.subplots(figsize=(15,3))
+spikes = Design_Matrix(spikes.iloc[:,1:], sampling_freq=1/tr)
+spikes.plot(ax=a, linewidth=2)
+
+plt.savefig(image_dir + 'spikes')
+plt.close()
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1761: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["global_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1761: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["global_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1761: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["global_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1761: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["global_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1761: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["global_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1761: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["global_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1767: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["diff_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1767: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["diff_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1767: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["diff_spike" + str(i + 1)].iloc[int(loc)] = 1
+/home/planetraveller/Desktop/Research/Projects/numbers-in-brain/code/.venv/lib/python3.11/site-packages/nltools/stats.py:1767: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  outlier["diff_spike" + str(i + 1)].iloc[int(loc)] = 1
+#+end_example
+
+* Building the final design mat
+#+begin_src python
+final_dm = pd.concat([dm_conv_filt_poly, mc_cov, spikes], axis=1)
+final_dm.heatmap(cmap='RdBu_r', vmin=-1, vmax=1)
+
+plt.savefig(image_dir + 'final_dm')
+plt.close()
+#+end_src
+
+#+RESULTS:
+
+* Data Loading and Smoothing
+#+begin_src python
+fwhm = 6
+smoothed = test_data.smooth(fwhm=fwhm)
+
+test_data.mean().plot()
+
+plt.savefig(image_dir + 'original_mean.png')
+plt.close()
+
+smoothed.mean().plot()
+plt.savefig(image_dir + 'smoothed_mean.png')
+plt.close()
+#+end_src
+
+#+RESULTS:
+
+* Regress!
+#+begin_src python
+smoothed.X = final_dm
+stats = smoothed.regress()
+print(stats.keys())
+
+print(smoothed.X.columns)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+dict_keys(['beta', 't', 'p', 'df', 'sigma', 'residual'])
+Index(['NumberMatching_c0', 'FaceMatching_c0', 'ShapeMatching_c0', 'cosine_1',
+       'cosine_2', 'cosine_3', 'cosine_4', 'poly_0', 'poly_1', 'poly_2',
+       'trans_x', 'trans_y', 'trans_z', 'rot_x', 'rot_y', 'rot_z', 'trans_x',
+       'trans_y', 'trans_z', 'rot_x', 'rot_y', 'rot_z', 'trans_x', 'trans_y',
+       'trans_z', 'rot_x', 'rot_y', 'rot_z', 'trans_x', 'trans_y', 'trans_z',
+       'rot_x', 'rot_y', 'rot_z', 'global_spike1', 'global_spike2',
+       'global_spike3', 'global_spike4', 'global_spike5', 'global_spike6',
+       'diff_spike1', 'diff_spike2', 'diff_spike3', 'diff_spike4'],
+      dtype='object')
+#+end_example
+
+* Saving the Image
+Not done yet
+#+begin_src python
+
+#+end_src

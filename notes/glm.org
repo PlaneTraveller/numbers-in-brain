@@ -1,0 +1,19 @@
+#+title: Glm
+
+
+* dump
+- ANOVA
+- ANCOVA
+- multiple regression
+- idea: represent dependent variable as lc of independent variables + error
+#+begin_export latex
+Y = X \times B + E
+#+end_export
+- Y is dependent (vector of observations)
+- X: mat of independent variables (design mat)
+- e.g. Y: observed fMRI, X: modeled responses based on design (basically conditions?)
+- GLM: infer activation patterns associated with conditions (different numbers)
+- GLM: input number, get brain response
+- can evaluate significance of independent variables' effects: how corelated numbers seen is to brain response
+- identify brain regions that show consistent activation pattern across participants
+-
