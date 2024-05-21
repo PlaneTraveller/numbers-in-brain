@@ -26,10 +26,16 @@ A project exploring number and algebra representations in the human brain using 
 - [X] pyenv
 - [X] ROI extraction
 - [ ] begin group analysis (classifiers) (prereqs?)
-- [ ] ask about design mat choice
-- [ ] build & clarify abstraction of design matrices (+clean up notebook format)
-- [ ] train level 1 glm using ~trial_type~ as design mat
-- [ ] add smoothing
+- [X] how to save? pickle? nii?
+- [X] ask about design mat choice
+- [ ] what next? group level? classifier?
+- [ ] write a good plotting function (threshholds? slice at what interval?)
+- [ ] build single-subject contrasts of different numbers
+- [X] find a way to plot
+- [X] build & clarify abstraction of design matrices (+clean up notebook format)
+- [X] refactor to include specific numbers into the design matrix
+- [X] train level 1 glm using ~trial_type~ as design mat
+- [X] add smoothing
 - [X] add in noise covariates (head motion corr)
 - [X] add responses from the same number together, print the 10 numbers
 - [X] use task to index data
@@ -169,6 +175,7 @@ A project exploring number and algebra representations in the human brain using 
 :END:
 - affine transformation
 - GLM
+- Voila: render notebook in browser
 
 
 * Q

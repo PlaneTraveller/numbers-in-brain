@@ -8,6 +8,8 @@ fmriprep-docker
 nltools
 pandas
 nibabel
+ipywidgets
+plotly
 
 
 seaborn

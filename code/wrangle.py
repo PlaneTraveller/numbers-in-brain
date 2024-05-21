@@ -230,5 +230,13 @@ plt.savefig(image_dir + 'original_mean.png')
 plt.close()
 
 smoothed.mean().plot()
-plt.savefig(image_dir + smoothed_mean.png')
+plt.savefig(image_dir + 'smoothed_mean.png')
 plt.close()
+
+smoothed.X = final_dm
+stats = smoothed.regress()
+print(stats.keys())
+
+print(smoothed.X.columns)
+
+

@@ -4,3 +4,4 @@
 /reports/
 /FSLICENCE.txt
 /freesurfer/
+/results/subj_glm/*.pkl
