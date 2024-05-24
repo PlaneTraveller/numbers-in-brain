@@ -7,3 +7,4 @@
 /results/subj_glm/*.pkl
 *.pkl
 /results
+/code/__pycache__/
