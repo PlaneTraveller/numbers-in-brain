@@ -1,0 +1,50 @@
+#+title: Garbage
+
+* Example Projects
+- [[https://github.com/huzeyann/MemoryEncodingModel/tree/main][huze]]
+
+* Packages
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+- nilearn
+- nibabel
+- https://nipy.org/
+- Nipype
+
+
+* Tolearn
+:PROPERTIES:
+:VISIBILITY: folded
+:END:
+- affine transformation
+- GLM
+- Voila: render notebook in browser
+
+
+* Q
+- Should I do neural decoding on number representations.
+- What statistical model should I use? Binary or mlp level
+- ~1000 trials. enough?
+- Data in entire timeseries or choose one volumn
+
+
+
+* Goals
+- representation difference of different algebraic tasks between LLMs and humans
+- number representations
+- other stuff with the existing data (DD&TA?)
+-
+
+* SPM
+- voxel wise glm, univariate statistics
+- graphical representations:
+
+* Questions
+** data
+- design matrix problem
+- odd_even contrasts: quantify? (ttest, full brain comparison)
+- svm parameters (kernel) (pvalue)
+- result: DD: 0.11, Mixed: 0.12, TA: 0.14
+** bg
+- the story for "introduction": why should I do this research?

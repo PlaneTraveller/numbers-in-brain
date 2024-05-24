@@ -78,7 +78,7 @@ def events2dm(l, subj, task, run, dm_design):
     dm = pd.concat([dm_l_out, dm_r_out], axis=1)
     dm = dm.loc[:, ~dm.columns.duplicated()]
 
-    print(dm.info())
+    # print(dm.info())
     # set the sampling frequency
     dm = Design_Matrix(dm, sampling_freq=1 / tr)
     return dm
@@ -96,6 +96,7 @@ def dm_add_nuisance(l, subj, task, run, dm, duration=128, order=2):
 
 
 def dm_add_noise_cov(l, subj, task, run, dm):
+    print(subj)
     noise_cov = l.get(
         scope="derivatives",
         datatype="func",
@@ -159,7 +160,7 @@ def smooth_data(l, subj, task, run, fwhm=6, data_dir="../dataset/ds004791"):
     # Attempt to load the smoothed data using BIDS loader
     try:
         smoothed_file = os.path.join(subject_dir, file_name)
-        print(smoothed_file)
+        # print(smoothed_file)
         if smoothed_file:
             print(f"Loading existing smoothed data from {smoothed_file}")
             smoothed_img = nib.load(smoothed_file)
@@ -248,10 +249,13 @@ def estimate_subj_glm(
     subj,
     task,
     run,
-    dm_design,
+    dm_design=numbers_design,
     image_dir="../results/",
     betas_dir="../results/subj_glm",
 ):
+    """
+    Returns {subj, ind, stats}
+    """
     # Define the file path for saving the GLM results
     file_name = f"sub-{subj}_task-{task}_run-{run}_glm_results.pkl"
     index_file_name = f"sub-{subj}_task-{task}_run-{run}_glm_index.txt"
@@ -280,7 +284,9 @@ def estimate_subj_glm(
     # Save design matrix heatmap
     final_dm.heatmap(cmap="RdBu_r", vmin=-1, vmax=1)
     os.makedirs(image_dir, exist_ok=True)
-    plt.savefig(os.path.join(image_dir, f"{subj}_final_dm.png"))
+    plt.savefig(
+        os.path.join(image_dir, f"sub-{subj}_task-{task}_run-{run}_final_dm.png")
+    )
     plt.close()
 
     # Perform smoothing
@@ -326,28 +332,6 @@ def betas_ind(glm_result, numbers):
     return out
 
 
-def number_contrast(glm_result, g1, g2, results_dir="../results"):
-    # betas = glm_result["stats"]["beta"]
-    # ind = glm_result["index"]
-    g1_cnt = len(g1)
-    g2_cnt = len(g2)
-
-    # g1_weight = g1_cnt / (g1_cnt + g2_cnt)
-    # g2_weight = -g2_cnt / (g1_cnt + g2_cnt)
-
-    g1_dict = betas_ind(glm_result, g1)
-    g2_dict = betas_ind(glm_result, g2)
-
-    subj = glm_result["subj"]
-
-    # contrast = sum(g1_dict.values()) * g1_weight + sum(g2_dict.values()) * g2_weight
-    contrast = sum(g1_dict.values()) / g1_cnt - sum(g2_dict.values()) / g2_cnt
-    contrast.plot()
-    plt.savefig(os.path.join(results_dir, f"{subj}_contrast.png"))
-    plt.close()
-    return contrast
-
-
 # =============================================================
 # == Run
 if __name__ == "__main__":
@@ -360,20 +344,14 @@ if __name__ == "__main__":
     run = 1
     proc_space = "MNI152NLin2009cAsym"
 
-    # Example usage
-    # subj = "0500"
-    # glm_result = estimate_subj_glm(l, subj, task, run, numbers_design)
-    # c = number_contrast(glm_result, ["1", "3", "5", "7", "9"], ["2", "4", "6", "8"])
+    test_subj = "0384"
+    # subj_list = ["0011", "0384", "0500", "0766"]
 
-    odd = ["1", "3", "5", "7", "9"]
-    even = ["2", "4", "6", "8"]
+    get_glm = ft.partial(estimate_subj_glm, l, task=task, run=run)
+    glm_stats = get_glm(test_subj)["stats"]
 
-    subj_list = ["0011", "0384", "0500", "0766"]
-
-    glm_curried = ft.partial(
-        estimate_subj_glm, l, task=task, run=run, dm_design=numbers_design
+    glm_stats["p"][2].plot(
+        view="mni", colorbar=True, threshold_upper=0, threshold_lower=0.001
     )
-    even_odd_contrast = ft.partial(number_contrast, g1=odd, g2=even)
-
-    glm_results = list(map(glm_curried, subj_list))
-    contrasts = list(map(even_odd_contrast, glm_results))
+    plt.savefig(os.path.join(results_dir, "try", "glm_p30.png"))
+    plt.close()

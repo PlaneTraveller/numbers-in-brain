@@ -5,3 +5,5 @@
 /FSLICENCE.txt
 /freesurfer/
 /results/subj_glm/*.pkl
+*.pkl
+/results
