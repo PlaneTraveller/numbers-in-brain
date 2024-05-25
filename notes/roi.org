@@ -1,0 +1,47 @@
+#+title: Roi
+
+* Feedback
+- activation map
+- spm
+- statistical parameter mapping
+- roi: draw by area/ do contrast on control (threshold: pvalue 0.001)
+- keep in mind the title
+- spotlight
+- q: children, noisy: remove outliers? smoothing?
+- q: what if lower tests are negative?
+- q: reason to use roi?
+- q: subject differentce: do I normalize before group analysis
+
+* Statistics
+- [[https://arxiv.org/pdf/1808.04075][p-value and statistical hypothesis testing]]
+
+* Hypothesis
+** GLM
+*** Activation Hypotheses
+- H(0, 1): There is no significant activation in any voxel when a subject views the number n compared to baseline.
+*** Number Specificity Hypotheses
+- H(0, 2): The pattern of brain activation does not significantly differ between viewing the number 1 and viewing the number 2.
+** Contrasts
+*** Contrast Hypotheses
+- H(0, 3): There is no significant difference in activation between viewing odd numbers (1, 3, 5, 7, 9) and viewing even numbers (2, 4, 6, 8).
+** Classifier
+*** Classifier Accuracy Hypotheses
+- H(0, 5): A classifier cannot predict the number being viewed based on brain activation patterns better than chance.
+*** Feature Importance Hypotheses
+- H(0, 6): No specific brain region's activation significantly contributes to the classifier's ability to predict the number being viewed.
+*** Group level activation Hypotheses
+- H(0, 7): The mean activation (beta value) for the contrast of interest across the population is zero.
+
+* To Test
+- [ ] define ROI (draw/whole-brain/data-driven methods: cluster-based threshholding)
+- [ ] H(1): calculate \mu_\beta_n with single-sample t-test (\forall (n, vox/roi))
+- [ ] H(2): calculate \mu_\beta_n1, \mu_\beta_n2 across subjects with paired t-test (\forall (n1, n2))
+- [ ] H(3): apply contrast filters to each subject to obtain one contrast-beta for each subject; then use paired t-test to calculate \mu_even and \mu_odd
+
+- [ ] H(5): perform permutation test to determine if the accuracy is significantly better than chance
+- [ ] H(6): extract svm weight (\forall (n, sub)); average across subjects (didn't understand!)
+- [ ] H(7): Random-Effects Analysis
+
+* Group level
+** Obtaining activation map
+dm1: subj, num, run

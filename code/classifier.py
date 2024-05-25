@@ -71,15 +71,14 @@ from sklearn.preprocessing import StandardScaler
 
 # =============================================================
 # == Constructing dataset
-def load_subj_beta(l, tup, subj):
+def load_subj_glm(l, subj):
     """
-    Takes a subject and a tuple of label-beta list pairs and
-    returns such a tuple of betas appended with the subject's betas.
+    Returns a tuple. First element is {"subj": [], "run": [], "stim": []}, second element is betas.
     """
     task = "matching"
     numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-
     print(subj)
+
     get_run1_glm = ft.partial(get_glm, l, task=task, run=1)
     get_run2_glm = ft.partial(get_glm, l, task=task, run=2)
     glm1 = get_run1_glm(subj)
@@ -89,13 +88,48 @@ def load_subj_beta(l, tup, subj):
 
     def parse_one(result_tup, data_tup):
         return (
-            result_tup[0] + [find_number(data_tup[0])],
+            {
+                "subj": result_tup[0]["subj"] + [subj],
+                "stim": result_tup[0]["stim"] + [find_number(data_tup[0])],
+            },
             result_tup[1] + [data_tup[1]],
         )
 
-    out = ft.reduce(parse_one, chain(betas_ind1.items(), betas_ind2.items()), ([], []))
+    out1 = ft.reduce(parse_one, betas_ind1.items(), ({"subj": [], "stim": []}, []))
+    out1[0]["run"] = ["1"] * len(out1[0]["stim"])
+    out2 = ft.reduce(parse_one, betas_ind2.items(), ({"subj": [], "stim": []}, []))
+    out2[0]["run"] = ["2"] * len(out2[0]["stim"])
+
+    out = (
+        {
+            "stim": out1[0]["stim"] + out2[0]["stim"],
+            "subj": out1[0]["subj"] + out2[0]["subj"],
+            "run": out1[0]["run"] + out2[0]["run"],
+        },
+        out1[1] + out2[1],
+    )
     print("Loaded betas for", subj)
-    return (tup[0] + out[0], tup[1] + out[1])
+    return out
+
+
+def load_subj_labels_beta(l, subj, tup):
+    """
+    Takes a subject and a tuple of label-beta list pairs and
+    returns such a tuple of betas appended with the subject's betas.
+
+    Strips the label to be the number preceived by the subject.
+    """
+    labels, betas = load_subj_glm(l, subj)
+    labels = list(map(find_number, labels["stim"]))
+    out = (
+        {
+            "subj": tup[0]["subj"] + labels["subj"],
+            "stim": tup[0]["stim"] + labels["stim"],
+            "run": tup[0]["run"] + labels["run"],
+        },
+        tup[1] + betas,
+    )
+    return out
 
 
 def load_data(l, group, results_dir="../results"):
@@ -109,7 +143,7 @@ def load_data(l, group, results_dir="../results"):
             data = pickle.load(f)
         return data
     else:
-        labels, data = ft.reduce(ft.partial(load_subj_beta, l), subjs, ([], []))
+        labels, data = ft.reduce(ft.partial(load_subj_labels_beta, l), subjs, ({}, []))
         data = Brain_Data(data, Y=pd.DataFrame(labels))
         with open(path_name, "wb") as f:
             pickle.dump(data, f)

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import os
+import pandas as pd
+import functools as ft
+
 
 def get_methods(object, spacing=20):
     methodList = []
@@ -21,7 +25,7 @@ def get_methods(object, spacing=20):
             print(method.ljust(spacing) + " " + " getattr() failed")
 
 
-def get_dd(group):
+def get_dd(group, data_dir="../dataset/ds004791"):
     with open(os.path.join(data_dir, "participants.tsv"), "r") as f:
         data = pd.read_csv(f, sep="\t")
 

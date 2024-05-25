@@ -312,24 +312,73 @@ def estimate_subj_glm(
     return {"stats": stats, "index": ind, "subj": subj}
 
 
-def betas_ind(glm_result, numbers):
+# def betas_ind(glm_result, numbers, main_task="NumberMatching"):
+#     ind = glm_result["index"]
+#     # print(ind)
+#     betas = glm_result["stats"]["beta"]
+
+#     # construct dict from ind and betas
+#     betas_dict = dict(zip(ind, betas))
+
+#     def contain_numbers(s):
+#         try:
+#             task_correct = s.split("_")[0] == main_task
+#             # print(task_correct)
+#             num_correct = find_number(s) in numbers
+#             return task_correct and num_correct
+#         except:
+#             return False
+
+#     out = {k: v for k, v in betas_dict.items() if contain_numbers(k)}
+
+#     return out
+
+
+def glm_ind(glm_result, condition, category):
     ind = glm_result["index"]
-    betas = glm_result["stats"]["beta"]
+    # print(ind)
+    data = glm_result["stats"][category]
 
     # construct dict from ind and betas
-    betas_dict = dict(zip(ind, betas))
+    data_dict = dict(zip(ind, data))
 
-    def contain_numbers(s):
+    def meet_condition(s):
         try:
-            task_correct = s.split("_")[0] == "NumberMatching"
+            # task_correct = s.split("_")[0] == main_task
+            # # print(task_correct)
+            # num_correct = find_number(s) in numbers
+            return condition(s)
+        except:
+            return False
+
+    out = {k: v for k, v in data_dict.items() if meet_condition(k)}
+
+    return out
+
+
+def number_cond(numbers, main_task="NumberMatching"):
+    def condition(s):
+        try:
+            task_correct = s.split("_")[0] == main_task
+            # print(task_correct)
             num_correct = find_number(s) in numbers
             return task_correct and num_correct
         except:
             return False
 
-    out = {k: v for k, v in betas_dict.items() if contain_numbers(k)}
+    return condition
 
-    return out
+
+def betas_ind(glm_result, numbers, main_task="NumberMatching"):
+    return glm_ind(glm_result, number_cond(numbers, main_task=main_task), "beta")
+
+
+def p_ind(glm_result, numbers, main_task="NumberMatching"):
+    return glm_ind(glm_result, number_cond(numbers, main_task=main_task), "p")
+
+
+def subj_p_ind(glm_result, subj):
+    return glm_ind(glm_result, lambda s: s.split("_")[-1] == subj, "p")
 
 
 # =============================================================
