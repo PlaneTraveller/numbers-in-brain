@@ -180,6 +180,11 @@ A project exploring number and algebra representations in the human brain using 
 - [X] what to do next (relearn spm?)
 - [X] test [1 2 3]
 - [X] roi or not, write report along the way
-- [ ] ANOVA, t-tests, or machine learning classification
-- [ ] define ROI
-- [ ] start writing results
+- [X] ANOVA, t-tests, or machine learning classification
+- [X] define ROI
+- [X] start writing results
+- [ ] write report
+- [ ] pitch research goal and direction
+- [X] organize stuff I'm doing and needs doing
+- [ ] reorganize, try pitch research goal and direction
+- [ ] read sample research

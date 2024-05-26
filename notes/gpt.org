@@ -256,3 +256,8 @@ Certainly! Let's go through the steps to determine number representations using 
 - **Interpret Results:** Identify significant ROIs, and use visualization techniques to present the findings, highlighting the regions involved in number representation.
 
 By following these steps, you can effectively determine how different numbers are represented in the brain using your defined ROIs. This approach ensures a focused and detailed analysis based on the most relevant brain regions identified in your whole-brain analysis.
+
+* Next
+Let me summarize what I've done so far. I've obtained glm models for each number conditions for each subject. Then, I grouped beta values from the same number conditions across subjects and runs. I ran a ttest on it, with unc = 0.001. Now I obtained some brain maps. Can you try to describe what those brain maps are? What are they useful for? How can those maps prove my hypotheses (that different numbers have different activations in the brain)? What other analysis can I do based on these results?
+
+** A:
