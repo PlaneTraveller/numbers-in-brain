@@ -1,10 +1,14 @@
 /materials/
 /code/.venv/
 /dataset/
-/reports/
 /FSLICENCE.txt
 /freesurfer/
-/results/subj_glm/*.pkl
 *.pkl
 /results
 /code/__pycache__/
+/reports/.~lock.0-上海科技大学本科毕业论文（设计）任务书.docx#
+/reports/0-上海科技大学本科毕业论文（设计）任务书.docx
+/reports/thesis/examples/
+/reports/thesis/materials/
+/reports/上海科技大学本科毕业论文表格模板下载（含归档目录）-2023/
+/reports/附件1-上海科技大学本科毕业论文表格模板下载（含归档目录）-2023.zip

@@ -1,0 +1,65 @@
+#+title: Thesis
+
+* Papers
+- [[https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495][DD original]] (style and flow)
+- [[https://web.ece.ucsb.edu/~parhami/pubs_folder/parh20-iemcon-arithmtic-human-brain-final.pdf][Number Representation and Arithmetic in the Human brain (for CSers)]]
+- [[https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3001935][Number-nonsymbolic quantities segragate (child)]]
+- [[https://www.researchgate.net/publication/24375674_Representation_of_Number_in_the_Brain][Number representation]]
+- [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7973899/][Very similar to mine]]
+- [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8302738/][Similar Work, recent]] (read this first)
+- [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8629133/][On parcellation scheme selection]]
+- [[https://www.biorxiv.org/content/10.1101/2022.12.20.521276v1.full.pdf][How unimportant it is]]
+- [[https://www.annualreviews.org/docserver/fulltext/neuro/32/1/annurev.neuro.051508.135550.pdf?expires=1716832782&id=id&accname=ar-404391&checksum=C3F4AA4AA8B8ADCC6272C14E91E9AD99][Representation of Number in the Brain (2009)]]
+
+* Outline
+** Abstract
+** Introduction (4k) (reviews)
+- abstract arithmetic representation (find the field!) (how we process numbers is still unclear)
+- why study it (dd, advent of LLM)
+- current work (how we understand numbers, areas of brain)
+- the advent of fMRI
+- my work
+  (研究问题，背景，目的；研究状况；研究成果；研究方法和逻辑)
+
+
+** Dataset (1.5k)
+- dataset info
+- why this dataset (pros and cons)
+- preprocessing
+** Results (4k)
+- single-subject glm (construction)
+- single-subject contrast
+- number classification
+** Discussion (1k)
+- connections with AI and DD
+
+* Keywords
+- non-symbolic number representations
+- neural coding of numbers
+- IPS
+- cardinal number
+
+* Insignts
+- connections to linguistics: the 10 numbers
+
+
+* 摘要
+the amazing effect of numbers in human intelligence, human performance on arithmatic tasks; contrast with AI models
+
+studying number representations (semantically) is very important for understanding human's ability to do maths, and give insight to how AIs can better do maths
+
+* 引言
+
+* 实验数据集与预处理方法
+** 数据集概况
+为了使用高精度的数据研究数字在人脑中的表示，我们选择了Fu Yu Kwok, et. al发表的公开数据集进行实验。本数据发表于[1]，主要研究内容是发展性数学技能障碍(Developmental dyscalculia, DD)是否与非典型的大脑激活有关。该研究使用了3T功能核磁共振测试了68个新加坡的小学阶段被试对于几个复杂任务的神经相应。被试被分为了两类：患有DD组(DD)和对照组(TA)。由于该工作在单变量分析中没有发现两个组别的响应差异，在本研究对数字表示的研究中不作区分。
+
+
+** 实验任务
+
+
+* 实验结果与分析
+* 讨论
+
+* Ref
+1. https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495

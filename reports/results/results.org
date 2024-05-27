@@ -1,0 +1,12 @@
+#+title: Results
+
+* results to be organized
+- [ ] t-test (activation map)
+  + [ ] test different p values to find the one that shows activation on all numbers
+  + [ ] find out relationship between activation strength & p-value)
+- [ ] Cluster level analysis (ROI)
+  + [ ] determine ROI, determine the region that is responsible for numbers (for both p values) (adjacency stuff)
+
+
+* Activation Map
+**

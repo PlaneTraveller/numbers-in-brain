@@ -1,0 +1,47 @@
+#+title: Defining ROI
+
+* Defining ROI
+** Whole brain
+*** Pro
+- unbiased exploration
+*** Con
+- require correction for multiple comparisons: reduce statistical power and increase risk of Type II errors
+** ROI-based
+*** Pro
+- include prior knowledge
+- increase statistical power by reducing number of comparisons
+*** Con
+- might miss important activations outside the predefined ROIs
+
+** Strategy
+Explore whole-brain analysis first to identify significant clusters of activation. Then, refine the analysis using ROIs based on the clusters identified in the initial whole-brain analysis or based on prior knowledge.
+
+** Steps
+1. [X] Preprocess fMRI Data (fMRIPrep + smoothing)
+2. [X] Fit GLM (regressors for experimental conditions + confounds)
+3. [X] Test activation hypothesis (contrast with implicit baseline (statistical maps), perform voxel-wise t-tests)
+4. [X] Test group-level activation hypotheses, produce activation map (Random Effect Analysis, 2nd level glm) (w/wo dd/ta group difference) (independent-samples t-test?) (use contrasts to test hypotheses)
+5. [X] Thresholding and Cluster-Level correction, save as ROI masks (voxel-wise threshold (p < 0.001); apply cluster-level correction (FWE or FDR))
+
+* Hypotheses
+*** Activation Hypotheses
+- H(0, 1): There is no significant activation in any voxel when a subject views the number n compared to baseline.
+*** Group level activation Hypotheses
+- H(0, 8): There is no significan activation in any voxel across all subjects viewing the same number.
+
+* Results
+- group-level glm (res: dm)
+- number regressor results
+- ttest for number groups
+- group-level glm for TA group
+
+* tmp todo
+- [X] write report to PI
+- [X] finish tests for all subjects
+- [X] verify what I really need: what p-value I need; what the p-value in the regressor is, what is the difference between t-test and the p from regressor
+- [X] finish activation ttest plotting pipeline
+- [X] reevaluate what 2nd level glm does
+- [X] make sure the data is loaded correctly
+
+* Q
+- [X] what is activation map
