@@ -42,14 +42,23 @@ import nibabel as nib
 # =============================================================
 # == Contrasts
 def number_contrast(glm_result, contrast, results_dir="../results/subj_contrasts"):
-    g1_dict = betas_ind(glm_result, contrast["g1"])
-    g2_dict = betas_ind(glm_result, contrast["g2"])
-
+    numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     subj = glm_result["subj"]
+    weight = contrast["weight"]
+    # g1_dict = betas_ind(glm_result, contrast["g1"])
+    # g2_dict = betas_ind(glm_result, contrast["g2"])
 
-    out = sum(g1_dict.values()) / len(contrast["g1"]) - sum(g2_dict.values()) / len(
-        contrast["g2"]
-    )
+    betas = map(lambda x: betas_ind(glm_result, [x]), numbers)
+    betas_averaged = Brain_Data(list(map(lambda x: sum(x.values()) / len(x), betas)))
+    weight_normalized = np.array(weight) - np.mean(weight)
+    print(weight_normalized)
+    print(betas_averaged)
+
+    out = betas_averaged * weight_normalized
+
+    # out = sum(g1_dict.values()) / len(contrast["g1"]) - sum(g2_dict.values()) / len(
+    #     contrast["g2"]
+    # )
     out.plot()
     plt.savefig(
         os.path.join(results_dir, f"{subj}_" + contrast["name"] + "_contrast.png")
@@ -218,15 +227,24 @@ if __name__ == "__main__":
 
     groups = [full_group, dd_group, ta_group]
 
+    # even_odd = {
+    #     "name": "odd_even",
+    #     "g1": ["1", "3", "5", "7", "9"],
+    #     "g2": ["2", "4", "6", "8"],
+    # }
     even_odd = {
-        "name": "odd_even",
-        "g1": ["1", "3", "5", "7", "9"],
-        "g2": ["2", "4", "6", "8"],
+        "name": "even_odd",
+        "weight": [1, -1, 1, -1, 1, -1, 1, -1, 1],
     }
-    big_small = {
-        "name": "big_small",
-        "g1": ["5", "6", "7", "8", "9"],
-        "g2": ["1", "2", "3", "4"],
+    # big_small = {
+    #     "name": "big_small",
+    #     "g1": ["5", "6", "7", "8", "9"],
+    #     "g2": ["1", "2", "3", "4"],
+    # }
+
+    linear_relation = {
+        "name": "linear_relation",
+        "weight": [1, 2, 3, 4, 5, 6, 7, 8, 9],
     }
 
     # even_odd_contrast1 = ft.partial(view_number_contrast, l, run=1, contrast=even_odd)
@@ -247,4 +265,16 @@ if __name__ == "__main__":
     # my_ttest(big_small, dd_group)
     # my_ttest(big_small, ta_group)
 
-    two_sample_ttest(l, dd_group, ta_group, even_odd)
+    # two_sample_ttest(l, dd_group, ta_group, even_odd)
+
+    linear_contrast1 = ft.partial(
+        view_number_contrast, l, run=1, contrast=linear_relation
+    )
+    linear_contrast2 = ft.partial(
+        view_number_contrast, l, run=2, contrast=linear_relation
+    )
+
+    linear1 = list(map(linear_contrast1, groups))
+    linear2 = list(map(linear_contrast2, groups))
+
+    two_sample_ttest(l, dd_group, ta_group, linear_relation)
