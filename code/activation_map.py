@@ -51,6 +51,9 @@ from helpers import get_dd
 # from nltools.stats import one_sample_ttest
 # from statsmodels.stats.multitest import multipletests
 
+# =============================================================
+# == Functions
+
 
 def extract_betas_by_label(data, label):
     mask = data.Y == label
@@ -77,33 +80,56 @@ def number_ttest(
 
     thr_t = res["thr_t"]
     thr_t.plot(view="mni", colorbar=True)
+
+    dir_name = f"{group_desc}_{th_method}_{th_value}_ttest"
+    save_path = os.path.join(results_dir, "activation", dir_name)
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
     plt.savefig(
         os.path.join(
-            results_dir,
-            "activation",
+            save_path,
             # f"{group_desc}_p{p_value}_{th_method}_{th_value}_{number}_ttest.png",
             f"{group_desc}_{th_method}_{th_value}_{number}_ttest.png",
         )
     )
     plt.close()
 
+    return thr_t
+
 
 def activation_map(
     l, group, p_value=0.05, th_param={"fdr": 0.05}, results_dir="../results"
 ):
-    numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    data = load_data(l, group)
-    group_desc = group["desc"]
-    number_ttest_curried = ft.partial(
-        number_ttest,
-        data,
-        group_desc,
-        p_value=p_value,
-        th_param=th_param,
-        results_dir=results_dir,
+    th_method = list(th_param.keys())[0]
+    th_value = th_param[th_method]
+    path_name = os.path.join(
+        results_dir,
+        "activation",
+        f"{group['desc']}_{th_method}_{th_value}_activation.pkl",
     )
-
-    list(map(number_ttest_curried, numbers))
+    if os.path.exists(path_name):
+        print("Loading activation map for", group["desc"])
+        with open(path_name, "rb") as f:
+            data = pickle.load(f)
+        return data
+    else:
+        numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        data = load_data(l, group)
+        group_desc = group["desc"]
+        number_ttest_curried = ft.partial(
+            number_ttest,
+            data,
+            group_desc,
+            p_value=p_value,
+            th_param=th_param,
+            results_dir=results_dir,
+        )
+        out = list(map(number_ttest_curried, numbers))
+        print("Saving activation map for", group["desc"])
+        with open(path_name, "wb") as f:
+            pickle.dump(out, f)
+        return out
 
 
 # =============================================================
@@ -130,13 +156,31 @@ if __name__ == "__main__":
     ta_group = {"desc": "TA_full", "subjs": dd_ta["TA"]}
 
     # # Uncorrected: threshold for any voxel as we are not controlling for multiple tests
-    # activation_map(l, full_group, th_param={"unc": 0.001})
-    activation_map(l, dd_group, th_param={"unc": 0.01})
-    activation_map(l, ta_group, th_param={"unc": 0.01})
+    # activation_map(l, full_group, th_param={"unc": 0.05})
+    activation_map(l, dd_group, th_param={"unc": 0.05})
+    # activation_map(l, ta_group, th_param={"unc": 0.05})
 
     # # FDR corrected
     # activation_map(l, full_group, th_param={"fdr": 0.05})
-
     # activation_map(l, full_group, th_param={"unc": 0.005})
     # activation_map(l, full_group, th_param={"unc": 0.01})
     # activation_map(l, full_group, th_param={"fdr": 0.1})
+
+    groups = [full_group, dd_group, ta_group]
+    params = [
+        {"unc": 0.05},
+        {"unc": 0.01},
+        {"unc": 0.005},
+        {"unc": 0.001},
+        {"fdr": 0.05},
+        {"fdr": 0.01},
+    ]
+
+    activation_methods = list(
+        map(
+            lambda th_param: ft.partial(activation_map, l, th_param=th_param),
+            params,
+        )
+    )
+
+    activations = [list(map(method, groups)) for method in activation_methods]

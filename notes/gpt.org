@@ -261,3 +261,609 @@ By following these steps, you can effectively determine how different numbers ar
 Let me summarize what I've done so far. I've obtained glm models for each number conditions for each subject. Then, I grouped beta values from the same number conditions across subjects and runs. I ran a ttest on it, with unc = 0.001. Now I obtained some brain maps. Can you try to describe what those brain maps are? What are they useful for? How can those maps prove my hypotheses (that different numbers have different activations in the brain)? What other analysis can I do based on these results?
 
 ** A:
+
+* Results so far
+### Summary of Your Workflow
+
+1. **First-Level Analysis:**
+   - Obtained GLM models for each number condition for each subject.
+   - Extracted beta values representing the activation for each condition and subject.
+
+2. **Second-Level Analysis:**
+   - Grouped beta values from the same number conditions across subjects and runs.
+   - Performed voxel-wise one-sample t-tests on these grouped beta values with an uncorrected threshold (`unc` = 0.001).
+
+3. **Results:**
+   - Obtained brain maps showing regions where the activation for each number condition is significantly different from zero at the specified threshold.
+
+### Description of the Brain Maps
+
+The brain maps you obtained are statistical parametric maps showing the regions of the brain where the activation associated with each number condition is statistically significant. Each map corresponds to a specific number condition (e.g., viewing number 1, number 2, etc.).
+
+### Usefulness of the Brain Maps
+
+1. **Identifying Active Brain Regions:**
+   - The maps highlight the brain regions that are significantly activated when subjects view specific numbers.
+   - They can help identify which areas of the brain are involved in processing numerical information.
+
+2. **Comparing Activation Patterns:**
+   - By visually inspecting and statistically comparing the brain maps for different number conditions, you can identify differences in activation patterns.
+   - This can provide evidence for the hypothesis that different numbers elicit different activations in the brain.
+
+### Proving Your Hypotheses
+
+1. **Different Activations for Different Numbers:**
+   - The brain maps show significant activations for each number condition, but to prove that different numbers have different activations, you need to compare these maps quantitatively.
+   - Conduct a repeated measures ANOVA or similar statistical tests to compare the activation patterns across the different number conditions.
+
+### Further Analysis
+
+1. **Contrast Analysis:**
+   - Perform direct contrasts between different number conditions to identify regions where the activation differs significantly.
+   - For example, test if the activation for number 1 is significantly different from the activation for number 2.
+
+2. **Region of Interest (ROI) Analysis:**
+   - Define ROIs based on the significant clusters identified in your brain maps.
+   - Extract and compare the average activation within these ROIs for each number condition.
+
+3. **Multivariate Pattern Analysis (MVPA):**
+   - Use machine learning techniques to classify brain activation patterns associated with different numbers.
+   - Train classifiers to distinguish between the different number conditions based on the brain activation patterns.
+
+4. **Correlation Analysis:**
+   - Correlate the brain activation patterns with behavioral data (e.g., reaction times, accuracy) to understand the relationship between neural activity and cognitive performance.
+
+### Example of Further Analysis: ROI Analysis
+
+#### Define ROIs
+
+1. **Identify Significant Clusters:**
+   - Use the brain maps to identify significant clusters of activation.
+   - Define these clusters as ROIs.
+
+2. **Extract ROI Data:**
+   - Extract the average beta values within these ROIs for each number condition.
+
+3. **Statistical Comparison:**
+   - Perform statistical tests to compare the ROI activation across different number conditions.
+
+### Example Workflow for ROI Analysis
+
+1. **Define ROIs:**
+   - Use a thresholded brain map to define ROIs (e.g., using a cluster size threshold).
+
+2. **Extract Beta Values for ROIs:**
+   - Extract the mean beta values within each ROI for each number condition.
+
+3. **Statistical Tests:**
+   - Perform repeated measures ANOVA or pairwise comparisons to test for differences in ROI activation across number conditions.
+
+```python
+import numpy as np
+import pandas as pd
+from nltools.data import Brain_Data
+from nltools.mask import create_sphere
+from nltools.stats import one_sample_ttest, permuted_ols
+from statsmodels.stats.multitest import multipletests
+
+# Load your Brain_Data object
+group_betas = Brain_Data('/path/to/beta_data.nii.gz')
+
+# Example labels in group_betas.Y: ['Number1', 'Number2', ..., 'Number1', 'Number2', ..., 'Number9']
+
+# Define ROIs based on significant clusters
+# For simplicity, assume you have predefined ROI coordinates
+roi_coords = [(30, -22, 50), (-30, -22, 50)]  # Example coordinates
+roi_radius = 5  # Radius in mm
+
+# Create ROI masks
+rois = [create_sphere(radius=roi_radius, coordinates=coord) for coord in roi_coords]
+
+# Extract beta values for each ROI and each number condition
+roi_betas = {}
+for i, roi in enumerate(rois):
+    roi_betas[i] = []
+    for number in range(1, 10):  # Assuming 9 conditions labeled 'Number1' to 'Number9'
+        label_to_extract = f'Number{number}'
+        mask = group_betas.Y == label_to_extract
+        filtered_betas = group_betas[mask]
+        roi_beta_values = filtered_betas.apply_mask(roi).mean(axis=0)  # Mean beta value within ROI
+        roi_betas[i].append(roi_beta_values)
+
+# Convert to DataFrame for statistical analysis
+roi_betas_df = pd.DataFrame(roi_betas)
+roi_betas_df.columns = [f'ROI_{i+1}' for i in range(len(rois))]
+roi_betas_df['Number'] = list(range(1, 10)) * len(group_betas) // 9  # Adjust for your data structure
+
+# Perform repeated measures ANOVA
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from statsmodels.stats.anova import AnovaRM
+
+# Reshape data for ANOVA
+melted_df = pd.melt(roi_betas_df, id_vars=['Number'], var_name='ROI', value_name='Beta')
+
+# Fit repeated measures ANOVA model
+anova_model = AnovaRM(melted_df, 'Beta', 'Number', within=['ROI']).fit()
+print(anova_model.summary())
+```
+
+### Summary
+
+- **Brain Maps:** Show significant activations for each number condition.
+- **Usefulness:** Identify active brain regions, compare activation patterns, and test hypotheses about different number activations.
+- **Further Analysis:** Perform contrast analysis, ROI analysis, MVPA, and correlation analysis to deepen your understanding of the data and test specific hypotheses.
+- **Statistical Testing:** Use repeated measures ANOVA, pairwise comparisons, or other statistical tests to compare activations across conditions and validate your hypotheses.
+
+By following these steps, you can comprehensively analyze your fMRI data and test your hypotheses about the neural representation of different numbers.
+
+* ROI extraction
+Q: I have now obtained the significant group-level activation map for each experiment condition (the 9 numbers). How do I determine the functional clusters? How do I determine the ROI for it? use nltools and other similar packages for your code examples
+A:
+To determine functional clusters and define ROIs from your significant group-level activation maps for each experiment condition (the 9 numbers), you can follow these steps:
+
+1. **Threshold the Activation Maps:**
+   - Apply a statistical threshold to identify significant clusters.
+2. **Extract Clusters:**
+   - Identify contiguous clusters of activation.
+3. **Define ROIs:**
+   - Create ROIs based on these clusters.
+
+### Steps with Example Code Using `nltools`
+
+#### Step 1: Load and Threshold the Activation Maps
+
+First, load your significant activation maps and apply a statistical threshold to identify significant clusters.
+
+```python
+from nltools.data import Brain_Data
+import numpy as np
+
+# Load your activation maps for each condition
+activation_maps = [Brain_Data(f'activation_map_number_{i}.nii.gz') for i in range(1, 10)]
+
+# Threshold the activation maps to identify significant clusters
+thresholded_maps = []
+threshold_value = 0.001  # Example threshold value, adjust as needed
+
+for activation_map in activation_maps:
+    thresholded_map = activation_map.copy()
+    thresholded_map.data = (activation_map.data < threshold_value).astype(int)
+    thresholded_maps.append(thresholded_map)
+```
+
+#### Step 2: Extract Clusters
+
+Use the `nltools` package or a similar package to extract contiguous clusters from the thresholded activation maps.
+
+```python
+from scipy.ndimage import label
+
+# Function to extract clusters from thresholded map
+def extract_clusters(thresholded_map):
+    labeled_map, num_features = label(thresholded_map.data)
+    clusters = []
+    for i in range(1, num_features + 1):
+        cluster = Brain_Data(data=(labeled_map == i).astype(int))
+        clusters.append(cluster)
+    return clusters
+
+# Extract clusters for each condition
+all_clusters = []
+for thresholded_map in thresholded_maps:
+    clusters = extract_clusters(thresholded_map)
+    all_clusters.append(clusters)
+```
+
+#### Step 3: Define ROIs from Clusters
+
+Create ROIs based on the extracted clusters. You can save these clusters as individual NIfTI files or use them directly for further analysis.
+
+```python
+# Save clusters as individual ROI files
+for i, clusters in enumerate(all_clusters, start=1):
+    for j, cluster in enumerate(clusters, start=1):
+        cluster.write(f'roi_number_{i}_cluster_{j}.nii.gz')
+
+print("ROIs have been saved as NIfTI files.")
+```
+
+#### Step 4: Use ROIs for Further Analysis
+
+Now that you have defined ROIs based on functional clusters, you can use these ROIs for further analysis, such as extracting beta values, performing statistical tests, or running connectivity analyses.
+
+### Example: Extract Beta Values Using ROIs
+
+```python
+# Assume you have preprocessed data for each subject
+subject_data = [Brain_Data(f'/path/to/subj_{i}_data.nii.gz') for i in range(1, 69)]
+
+# Extract beta values within each ROI for each subject
+roi_beta_values = {}
+for i in range(1, 10):  # For each number condition
+    roi_beta_values[i] = []
+    for j in range(1, len(all_clusters[i-1]) + 1):  # For each cluster in the condition
+        roi = Brain_Data(f'roi_number_{i}_cluster_{j}.nii.gz')
+        roi_values = [subj.apply_mask(roi).mean() for subj in subject_data]
+        roi_beta_values[i].append(roi_values)
+
+# Convert to DataFrame for statistical analysis
+import pandas as pd
+
+roi_beta_df = pd.DataFrame()
+for i in range(1, 10):
+    for j in range(len(all_clusters[i-1])):
+        roi_beta_df[f'Number{i}_Cluster{j+1}'] = roi_beta_values[i][j]
+
+print(roi_beta_df.head())
+```
+
+### Statistical Analysis of Extracted Beta Values
+
+You can now perform statistical tests on the extracted beta values to compare the activations across different number conditions.
+
+```python
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from statsmodels.stats.anova import AnovaRM
+
+# Example of performing ANOVA on the extracted ROI beta values
+# Reshape data for ANOVA
+melted_df = pd.melt(roi_beta_df.reset_index(), id_vars=['index'], var_name='Condition', value_name='Beta')
+melted_df.columns = ['Subject', 'Condition', 'Beta']
+
+# Fit repeated measures ANOVA model
+anova_model = AnovaRM(melted_df, 'Beta', 'Subject', within=['Condition']).fit()
+print(anova_model.summary())
+```
+
+### Summary
+
+1. **Threshold Activation Maps:** Apply a threshold to identify significant clusters in each activation map.
+2. **Extract Clusters:** Identify contiguous clusters in the thresholded maps.
+3. **Define ROIs:** Create and save ROIs based on the identified clusters.
+4. **Extract Beta Values:** Use the defined ROIs to extract beta values from each subject's data.
+5. **Statistical Analysis:** Perform statistical tests on the extracted beta values to compare activations across conditions.
+
+By following these steps, you can determine functional clusters and define ROIs based on your significant group-level activation maps, allowing for focused and detailed further analysis.
+
+* Searchlight and Parcellation
+** Searchlight
+The searchlight algorithm is a multivariate analysis technique used in neuroimaging to identify brain regions that carry information about a specific task or condition by moving a "searchlight" (a small spherical region) across the brain and performing a statistical analysis within that region at each step. It is particularly useful for:
+
+1. **Multivariate Pattern Analysis (MVPA):**
+   - Identifying regions where the pattern of activity, rather than the average activity, distinguishes between different conditions or stimuli.
+
+2. **Local Information Mapping:**
+   - Mapping the spatial distribution of information across the brain to find which regions contain information about the experimental conditions.
+
+### Searchlight Algorithm Process
+
+1. **Define a Searchlight Sphere:**
+   - A small, typically spherical, region of interest (e.g., 3-5 voxels in radius).
+
+2. **Move the Searchlight Across the Brain:**
+   - For each voxel, center the sphere on that voxel and include all voxels within the sphere.
+
+3. **Perform Statistical Analysis:**
+   - Within each sphere, perform a statistical test or classification analysis to determine how well the data within the sphere discriminates between conditions.
+
+4. **Store Results:**
+   - Assign the result of the analysis (e.g., accuracy of a classifier) to the center voxel of the sphere and move to the next voxel.
+
+5. **Generate a Brain Map:**
+   - The result is a whole-brain map where each voxel’s value represents the result of the local analysis.
+
+### Relevance to Your Purpose
+
+The searchlight algorithm is relevant if you are interested in:
+- Identifying distributed patterns of activation that differentiate between number conditions.
+- Finding brain regions where local multivariate patterns, rather than mean activation, are significant.
+
+However, if your primary goal is to extract ROIs based on significant activation from a univariate group-level analysis, the searchlight algorithm may not be necessary. Instead, your current approach of thresholding activation maps and extracting clusters is more straightforward for defining ROIs based on significant mean activation.
+
+### Example Workflow for Searchlight Analysis
+
+If you decide that the searchlight analysis is relevant, here's a basic workflow using `nilearn`:
+
+#### Step 1: Import Libraries and Load Data
+
+```python
+from nilearn.image import new_img_like
+from nilearn.input_data import NiftiMasker
+from nilearn.decoding import SearchLight
+from sklearn.svm import SVC
+import numpy as np
+
+# Load your 4D fMRI data and mask
+fmri_img = 'path/to/fmri_image.nii.gz'
+mask_img = 'path/to/mask_image.nii.gz'
+
+# Labels for each condition (e.g., 1 to 9 for your number conditions)
+labels = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9] * number_of_trials_per_condition)
+
+# Fit a mask to the data
+masker = NiftiMasker(mask_img=mask_img)
+fmri_data = masker.fit_transform(fmri_img)
+```
+
+#### Step 2: Perform Searchlight Analysis
+
+```python
+# Define the searchlight
+searchlight = SearchLight(mask_img, radius=5, estimator=SVC(), scoring='accuracy', verbose=1, n_jobs=-1)
+
+# Run the searchlight analysis
+searchlight.fit(fmri_img, labels)
+
+# Get the searchlight scores (accuracy map)
+searchlight_map = searchlight.scores_
+
+# Convert the scores to a NIfTI image
+searchlight_img = new_img_like(mask_img, searchlight_map)
+```
+
+#### Step 3: Save and Inspect the Searchlight Map
+
+```python
+# Save the searchlight results
+searchlight_img.to_filename('searchlight_results.nii.gz')
+
+# Inspect the searchlight results
+from nilearn.plotting import plot_stat_map
+plot_stat_map(searchlight_img, bg_img='path/to/anatomical_image.nii.gz', threshold=0.1, display_mode='ortho')
+```
+
+### Summary
+
+- **Searchlight Algorithm:** Used for local multivariate pattern analysis, identifying regions where patterns of activity distinguish conditions.
+- **Relevance:** Useful for MVPA and local information mapping, less so for defining ROIs based purely on significant univariate activation.
+- **Current Approach:** Thresholding activation maps and extracting clusters is more straightforward for defining ROIs based on significant mean activation.
+- **Additional Analysis:** If interested in multivariate patterns, searchlight analysis can be applied as an additional step to map local information distribution.
+
+By understanding the strengths and purposes of the searchlight algorithm, you can decide whether it complements your current approach or if your existing methodology sufficiently addresses your research questions.
+
+** Parcellation
+Yes, parcellation can be a useful method for ROI extraction. Parcellation involves dividing the brain into distinct regions or parcels based on anatomical or functional criteria. These parcels can then be used as ROIs for further analysis. This approach can provide a systematic and comprehensive way to define ROIs compared to defining them manually or based solely on activation clusters.
+
+### Benefits of Using Parcellation
+
+1. **Systematic Division:** Parcellation divides the brain into standard regions, providing a consistent and reproducible way to define ROIs.
+2. **Anatomical and Functional Relevance:** Parcellation can be based on anatomical landmarks or functional connectivity patterns, making the ROIs more meaningful.
+3. **Ease of Comparison:** Using standard parcellation schemes allows for easier comparison across studies and subjects.
+
+### Common Parcellation Schemes
+
+1. **Anatomical Atlases:**
+   - **AAL (Automated Anatomical Labeling) Atlas**
+   - **Harvard-Oxford Atlas**
+   - **Desikan-Killiany Atlas**
+
+2. **Functional Parcellations:**
+   - **Schaefer Atlas (based on resting-state fMRI connectivity)**
+   - **Yeo Atlas (7 or 17 functional networks)**
+
+### Example Workflow Using `nilearn` for Parcellation-Based ROI Extraction
+
+#### Step 1: Import Libraries and Load Data
+
+```python
+from nilearn import datasets, image, masking
+from nilearn.input_data import NiftiLabelsMasker
+import numpy as np
+import pandas as pd
+
+# Load your activation maps for each condition
+activation_maps = [image.load_img(f'activation_map_number_{i}.nii.gz') for i in range(1, 10)]
+
+# Load an example atlas (e.g., Schaefer atlas)
+atlas = datasets.fetch_atlas_schaefer_2018(n_rois=100, yeo_networks=7)
+atlas_filename = atlas.maps
+labels = atlas.labels
+
+# Load mask image (if applicable)
+mask_img = 'path/to/mask_image.nii.gz'
+```
+
+#### Step 2: Apply Parcellation and Extract ROI Time Series
+
+Use the atlas to extract the mean activation within each parcel.
+
+```python
+# Initialize NiftiLabelsMasker with the atlas
+masker = NiftiLabelsMasker(labels_img=atlas_filename, standardize=True, mask_img=mask_img)
+
+# Extract ROI time series for each activation map
+roi_time_series = []
+for activation_map in activation_maps:
+    time_series = masker.fit_transform(activation_map)
+    roi_time_series.append(time_series)
+
+# Convert to DataFrame for easier manipulation
+roi_time_series_df = [pd.DataFrame(ts, columns=labels) for ts in roi_time_series]
+
+# Inspect the extracted time series for the first condition
+print(roi_time_series_df[0].head())
+```
+
+#### Step 3: Perform Statistical Analysis on Extracted ROI Data
+
+Use the extracted ROI data for statistical analysis, such as comparing activations across conditions.
+
+```python
+from statsmodels.formula.api import ols
+from statsmodels.stats.anova import AnovaRM
+
+# Combine data from all conditions for ANOVA
+combined_data = pd.concat([df.assign(Condition=f'Number{i+1}') for i, df in enumerate(roi_time_series_df)], axis=0)
+
+# Perform repeated measures ANOVA for each ROI
+results = {}
+for roi in labels:
+    model = AnovaRM(combined_data, depvar=roi, subject='index', within=['Condition'])
+    res = model.fit()
+    results[roi] = res
+
+# Print ANOVA results for the first ROI
+print(results[labels[1]].summary())
+```
+
+#### Step 4: Visualize Significant ROIs
+
+Visualize the ROIs that show significant differences across conditions.
+
+```python
+from nilearn.plotting import plot_roi
+
+# Threshold the ANOVA results to find significant ROIs
+significant_rois = [roi for roi, res in results.items() if res.anova_table['Pr > F'][0] < 0.05]
+
+# Create a binary mask for significant ROIs
+significant_mask = np.zeros(image.load_img(atlas_filename).shape)
+for roi in significant_rois:
+    idx = labels.index(roi)
+    significant_mask += (image.load_img(atlas_filename).get_fdata() == idx)
+
+# Convert to NIfTI image
+significant_mask_img = image.new_img_like(atlas_filename, significant_mask)
+
+# Plot the significant ROIs
+plot_roi(significant_mask_img, bg_img='path/to/anatomical_image.nii.gz', title='Significant ROIs')
+```
+
+### Summary
+
+1. **Parcellation-Based ROI Extraction:**
+   - Parcellation divides the brain into predefined regions, which can then be used as ROIs.
+   - Provides a systematic and reproducible way to define ROIs.
+   - Can be based on anatomical landmarks or functional connectivity patterns.
+
+2. **Steps:**
+   - Load activation maps and parcellation atlas.
+   - Extract mean activation within each parcel using the atlas.
+   - Perform statistical analysis on the extracted data.
+   - Visualize significant ROIs.
+
+3. **Tools:**
+   - **`nilearn`** for handling neuroimaging data and applying parcellation.
+   - **`statsmodels`** for performing statistical analysis.
+
+By using parcellation, you can systematically define ROIs and perform focused analyses, enhancing the interpretability and reproducibility of your neuroimaging results.
+
+* Using parcellation
+Q: I'm thinking about doing this: I will choose a relevant parcellation map, then include all parcels that include voxels that are deemed significant in my activation maps. the combination of all those parcels will be my final ROIs. Is this a good idea?
+Yes, your proposed approach is a good and systematic way to define ROIs based on your significant activation maps. Here’s why it can be a valuable strategy and a step-by-step guide on how to implement it using `nilearn`:
+
+### Advantages of Your Approach
+
+1. **Combines Data-Driven and Parcellation Approaches:**
+   - By using a parcellation map, you ensure that your ROIs are anatomically or functionally meaningful.
+   - Including parcels with significant voxels integrates data-driven findings, ensuring that your ROIs are relevant to your specific analysis.
+
+2. **Increases Robustness and Reproducibility:**
+   - Standard parcellations are widely used and provide a common framework for ROI definitions, aiding in reproducibility.
+   - Combining significant voxels ensures that the selected ROIs are relevant to your data.
+
+3. **Reduces Multiple Comparisons:**
+   - Focusing on predefined parcels can reduce the number of statistical tests compared to voxel-wise analysis, potentially increasing statistical power.
+
+### Step-by-Step Implementation
+
+#### Step 1: Load Activation Maps and Parcellation Atlas
+
+First, load your significant activation maps and the chosen parcellation atlas.
+
+```python
+from nilearn import datasets, image, masking
+from nilearn.input_data import NiftiLabelsMasker
+import numpy as np
+
+# Load your activation maps for each condition
+activation_maps = [image.load_img(f'activation_map_number_{i}.nii.gz') for i in range(1, 10)]
+
+# Load an example atlas (e.g., Schaefer atlas)
+atlas = datasets.fetch_atlas_schaefer_2018(n_rois=100, yeo_networks=7)
+atlas_filename = atlas.maps
+labels = atlas.labels
+
+# Load mask image (if applicable)
+mask_img = 'path/to/mask_image.nii.gz'
+```
+
+#### Step 2: Identify Significant Parcels
+
+Identify the parcels that contain significant voxels in your activation maps.
+
+```python
+from nilearn.image import threshold_img
+
+# Threshold activation maps
+thresholded_maps = [threshold_img(map, threshold='99%', two_sided=True) for map in activation_maps]
+
+# Identify significant parcels
+significant_parcels = set()
+atlas_data = image.load_img(atlas_filename).get_fdata()
+for thresholded_map in thresholded_maps:
+    thresholded_data = thresholded_map.get_fdata()
+    significant_voxels = np.where(thresholded_data > 0)
+    for x, y, z in zip(*significant_voxels):
+        parcel_id = atlas_data[x, y, z]
+        if parcel_id > 0:  # Exclude background
+            significant_parcels.add(parcel_id)
+
+# Print the significant parcels
+print(f'Significant parcels: {significant_parcels}')
+```
+
+#### Step 3: Create a Combined ROI Mask
+
+Create a combined mask that includes all significant parcels.
+
+```python
+# Create an empty mask
+combined_mask_data = np.zeros(atlas_data.shape)
+
+# Include significant parcels in the mask
+for parcel_id in significant_parcels:
+    combined_mask_data[atlas_data == parcel_id] = 1
+
+# Convert to NIfTI image
+combined_mask_img = image.new_img_like(atlas_filename, combined_mask_data)
+
+# Save the combined ROI mask
+combined_mask_img.to_filename('combined_rois.nii.gz')
+
+# Plot the combined ROI mask
+from nilearn.plotting import plot_roi
+plot_roi(combined_mask_img, bg_img='path/to/anatomical_image.nii.gz', title='Combined ROIs')
+```
+
+#### Step 4: Extract Data from Combined ROI
+
+Use the combined ROI mask to extract data for further analysis.
+
+```python
+# Initialize the masker with the combined ROI mask
+masker = NiftiLabelsMasker(labels_img=combined_mask_img, standardize=True, mask_img=mask_img)
+
+# Extract ROI time series for each activation map
+roi_time_series = []
+for activation_map in activation_maps:
+    time_series = masker.fit_transform(activation_map)
+    roi_time_series.append(time_series)
+
+# Convert to DataFrame for easier manipulation
+roi_time_series_df = [pd.DataFrame(ts, columns=labels) for ts in roi_time_series]
+
+# Inspect the extracted time series for the first condition
+print(roi_time_series_df[0].head())
+```
+
+### Summary
+
+1. **Load Activation Maps and Parcellation Atlas:** Use `nilearn` to load your data and a relevant parcellation atlas.
+2. **Identify Significant Parcels:** Threshold your activation maps and identify parcels that contain significant voxels.
+3. **Create Combined ROI Mask:** Combine all significant parcels into a single ROI mask.
+4. **Extract Data from Combined ROI:** Use the combined ROI mask to extract data for further analysis.
+
+By following this approach, you ensure that your ROIs are both anatomically/functional meaningful and relevant to your specific activation patterns, providing a robust framework for subsequent analyses.

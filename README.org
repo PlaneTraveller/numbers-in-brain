@@ -94,6 +94,7 @@ A project exploring number and algebra representations in the human brain using 
 - reddit
 - [[https://neurovault.org][Neurovault (ROI masks), nltools]]
 - [[https://neurostars.org][Neurostars forum]]
+- [[https://enigma-toolbox.readthedocs.io/en/latest/index.html][Enigma Toolbox]]
 
 
 * Tasks
@@ -183,8 +184,31 @@ A project exploring number and algebra representations in the human brain using 
 - [X] ANOVA, t-tests, or machine learning classification
 - [X] define ROI
 - [X] start writing results
-- [ ] write report
-- [ ] pitch research goal and direction
+- [X] write report
+- [X] pitch research goal and direction
 - [X] organize stuff I'm doing and needs doing
-- [ ] reorganize, try pitch research goal and direction
-- [ ] read sample research
+- [X] reorganize, try pitch research goal and direction
+- [X] read sample research
+- [X] paper plan
+- [X] organize result (what I plan to investigate)
+- [X] figure out what ROI does, what classifier does (mvpa)
+* Tomorrow
+- [ ] perform mvpa to examine activation differences
+- [ ] extract ROI (post-hoc)
+- [ ] revamp paper
+
+* Today
+- [ ] finish paper draft (1h)
+- [ ] fill out intro (2h)
+- [ ] start experiment part (1h)
+- [ ] start intro skeleton (1h)
+- [X] finish whole brain level analysis
+- [X] ta/dd contrast (odd-even, big-num, etc) t-test (subj level) (easy)
+- [X] dd/ta contrast (easy, just change grouping (paired-t-test))
+- [X] find dm way to do analysis, do two sample ttest
+- [X] organize previous tests, find names, do it (while starting paper) (bottom line: two sample ttest) (2h)
+- [X] find and code ta/dd differences (rest)
+- [X] find names for all (and dms) (30)
+- [X] learn it generally (15)
+- [X] speed learn maths (30)
+- [X] find paper-code balance

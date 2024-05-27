@@ -1,0 +1,95 @@
+#+title: Results
+
+* Analyses
+- [X] t-test (activation map)
+  + [X] test different p values to find the one that shows activation on all numbers
+  + [X] find out relationship between activation strength & t-value
+  + [X] investigate why missing?
+  + [X] what is so special about the number 5? and beyond?
+- [-] Cluster level analysis (ROI)
+  + [ ] determine ROI, determine the region that is responsible for numbers (for both p values) (adjacency stuff) (cluster size threshold) (use parcellation)
+  + [ ] rerun the tests with ROI masks
+  + [X] choose functional parcellation map (nilearn & Neuroparc, or Chang)
+  + [X] how to determine ROI (feature selection) (just union the one ROI) (parcellation) (searchlight)
+  + [X] what is the goal of cluster level analysis (compare ROI activation across number conditions (repeated measures ANOVA to test differences in ROI activation))
+- [-] Classifier (MVPA)
+  + [X] purpose?
+  + [ ] searchlight?
+  + [ ] multivariate prediction? (MVPA)
+- [X] 2nd level GLM
+  + [X] problem? (lack of statistical power + innate noise(seen in t-testts)) (revamp design)
+** Furthur Analyses
+- [X] Contrasts
+  + [X] find the hypotheses to test by using contrasts
+  + [X] do even-odd and big-small group ttests
+- [ ] Connection with DD
+  + [ ] try proving/contradicting with original paper's work?
+  + [ ] do activation two-sample ttests for each number
+  + [ ] do contrast two-sample ttests
+
+
+* Activation Map
+** Notes
+- full fdr 0.05: why so good? error! (the directly thresholded using plot method)
+- need to plot the activation! (betas), and indicate the specific thresholds (p, correctedness, t-value, etc)
+** Results
+- proved the group-level activation hypotheses (spm)
+- showed differences in activation patterns
+** Questions
+- [ ] why 1-4 is missing? why low values? (conj: lower numbers does not require number "understanding", but uses other systems (intuitions)) (try use the jargons, and understand more about the numerical brain)
+- [ ] what's so special about 5?
+- [ ] to test the difference? how to deal with the missing numbers? (repeated measures ANOVA)
+
+* ROI analysis
+** Notes
+- goal: reduce multiple comparisons! increase statistical power
+- first define clusters to extract roi
+- mask it, then repeat activation map
+- [[http://cosanlab.com/static/papers/delaVega_2016_JNeuro.pdf][Parcellation map]]
+- solution: combine data-driven and parcellation approaches: include every parcell that contain significant voxels
+** Questions
+- [X] determine ROI how
+- [ ] use ROI to compare differences across all numbers?
+
+* MVPA
+** Notes
+- temporal data reduction (glm)
+- either condition or trial wise
+- basically what I did: use svm to predict activations form different categories
+- result: null!
+- try using ROIed
+- compare whole-brain/roi \times 2/3 categories/9 categories
+- use parameters as biomarkers
+
+* Results
+** Whole brain
+- There is significant activation for numbers 5678 at the group level
+- The activation regions align with previous findings + new observations (number t-test)
+- DD & TA groups show significantly different activation for each number
+
+** Contrasts
+- There is a significant activation difference for even-odd (big-small) at the group level (subject contrast, one-sample t-test)
+- DD & TA groups show significantly different activation for even-odd (big-small) contrast (two sample t-test)
+** ROI
+- mvpa: the numbers show significantly different activations in the ROIs
+
+
+* Wish list
+- create classifier for DD/TA
+
+* Hypotheses
+** Individual Number condition
+- For the condition /i/, DD and TA has the same activation mean.
+  + Two-sample t-test for condition /i/
+
+** Even-odd
+- The mean activation of even and odd numbers is the same across all subjects.
+  + Paired t-test on the two conditions / One-sample t-Test on Contrast
+- The mean activation difference between even and odd numbers is the same across DD and TA .
+  + Two-sample t-test for contrast
+- There is no interaction effect between condition (even vs. odd) and group (DD vs. TA).
+  + Two-Way ANOVA with Interaction
+
+** Linear Trend
+- There is no linear trend of number activations across all subjects
+  + One-sample t-test for contrast

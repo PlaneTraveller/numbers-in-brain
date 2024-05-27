@@ -110,6 +110,10 @@ def estimate_group_glm(l, group, results_dir="../results/group_glm"):
         return {"stats": stats, "index": ind, "group": group["desc"]}
 
 
+def two_sample_ttest(l, g1, g2, contrast, results_dir="../results/two_ttest"):
+    pass
+
+
 # =============================================================
 # == Run
 if __name__ == "__main__":

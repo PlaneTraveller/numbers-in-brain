@@ -1,5 +1,9 @@
-#+title: Relatedwork
+#+title: Related work
 
 * [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8302738/][Review on dynamics of numerical and arithmetic abilities]]
 - good intro!
+- structure and meaning of numbers
+- manipulations of numbers
+- neurocognitive development
+- atypical development, i.e., in dyscalculia
 -
