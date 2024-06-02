@@ -10,9 +10,22 @@
 - [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8629133/][On parcellation scheme selection]]
 - [[https://www.biorxiv.org/content/10.1101/2022.12.20.521276v1.full.pdf][How unimportant it is]]
 - [[https://www.annualreviews.org/docserver/fulltext/neuro/32/1/annurev.neuro.051508.135550.pdf?expires=1716832782&id=id&accname=ar-404391&checksum=C3F4AA4AA8B8ADCC6272C14E91E9AD99][Representation of Number in the Brain (2009)]]
+- [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8302738/][core]]
+- [[https://www.sciencedirect.com/science/article/pii/S1878929321000244][TCM developmental in fMRI]]
+- [[https://www.sciencedirect.com/science/article/abs/pii/S0891422217302950][TCM review, focus on dd]]
+- The Triple Code Model (Dehaene & Cohen, 1995)
+- [[http://www.xml-data.org/XYYXWYJ/html/2019/4/2019-4-512.htm][nice chinese paper]]
 
+* Note
+- activation in pfc decrease the better they are at maths (less attention required)
 * Outline
 ** Abstract
+
+the amazing effect of numbers in human intelligence, human performance on arithmatic tasks; contrast with AI models
+
+studying number representations (semantically) is very important for understanding human's ability to do maths, and give insight to how AIs can better do maths
+
+studying number representations may give a new perspective of identifying neural correlates of DD
 ** Introduction (4k) (reviews)
 - abstract arithmetic representation (find the field!) (how we process numbers is still unclear)
 - why study it (dd, advent of LLM)
@@ -20,7 +33,32 @@
 - the advent of fMRI
 - my work
   (研究问题，背景，目的；研究状况；研究成果；研究方法和逻辑)
+- look at core!
+- counting and numerical order!
+**** 研究数字表征的意义
+基本数字认知是现代人类思维活动的基石。
 
+**** 数学理解现状
+**** 发展性计算障碍
+**** 研究数字表征，并且用其了解发展性计算障碍的神经机制
+
+- 1. being able to do maths is important, economy, etc boilerplate
+- 2. compare the two groups for more insight into how the human brain do maths (process numerical information) (evidence that general AI suck at maths) (and understand number processing)
+*** DD研究现状
+- current neural correlates of dd (ref from what I'm following) (problems: lack of data, coarse experiment design, etc)
+- the work im following (huge dataset, good modalities)
+- problem: not at the level of numbers! (or not)
+
+*** 为什么在数字表征层面研究DD是有意义的 (Proposing to study DD functionally/mechanistically)
+- brief of the mechanisms interested
+- argue about the mechanics! (mechanics from core paper)
+- draw insight from number processing (mechanics from core paper)
+# - show importance of certain features of human number processing
+- what this paper set out to do
+*** new
+个人：实现自我价值
+社区：影响社区的集体幸福感
+国家：影响国家经济发展
 
 ** Dataset (1.5k)
 - dataset info
@@ -30,6 +68,7 @@
 - single-subject glm (construction)
 - single-subject contrast
 - number classification
+- effect of counting!!!!
 ** Discussion (1k)
 - connections with AI and DD
 
@@ -43,23 +82,159 @@
 - connections to linguistics: the 10 numbers
 
 
-* 摘要
-the amazing effect of numbers in human intelligence, human performance on arithmatic tasks; contrast with AI models
+* stack
+- [ ] read iccc for p1
+- [ ] read myfollow for p2, p1
+- [ ] find one more paper for covering dd (read core first)
+- [X] read core for p1, p3
 
-studying number representations (semantically) is very important for understanding human's ability to do maths, and give insight to how AIs can better do maths
+
+* 摘要
 
 * 引言
 
-* 实验数据集与预处理方法
-** 数据集概况
-为了使用高精度的数据研究数字在人脑中的表示，我们选择了Fu Yu Kwok, et. al发表的公开数据集进行实验。本数据发表于[1]，主要研究内容是发展性数学技能障碍(Developmental dyscalculia, DD)是否与非典型的大脑激活有关。该研究使用了3T功能核磁共振测试了68个新加坡的小学阶段被试对于几个复杂任务的神经相应。被试被分为了两类：患有DD组(DD)和对照组(TA)。由于该工作在单变量分析中没有发现两个组别的响应差异，在本研究对数字表示的研究中不作区分。
+核心：借助DD/TA差异来研究数字表示
 
+
+基本数量认知是现代人类思维活动的基石。更好的理解人脑处理数字信息、进行数字运算、以及对数量产生感受的神经机制有着巨大的意义。从个人角度而言，缺乏数量认知会大幅度影响人的就业情况和竞争力。有研究表明，基本数量认知和识字能力对于自我价值实现几乎同等重要[9]。从国家角度而言，数学障碍会导致严重的就业限制，影响经济发展[10]。
+
+** 基本数量认知
+目前，学术界对于数量认知的主流模型是三重编码模型[7, 8]。该理论囊括了数量认知的方方面面，其中包括人脑对非符号数量和符号数字的感知使用的神经机制。非符号数量感知指的是人对不使用语言或数字的数量的直观感知能力。对数量的抽象感知能力是数字理解能力，数学运算能力发展的重要先决条件之一[11]。而符号数量感知指的是人将抽象的数学符号（如阿拉伯数字，自然语言中的数字等）转换成数量的能力。近二十年来，有许多研究尝试明确这两个重要功能的神经机制，其中的一些重要结论改变了该领域对数量认知的理解。首先，近似数系统（Approximate Number System, ANS）是三重编码模型的核心[12]。它反映的是用直感去估计，区分物体数量的能力，为其他编码模式（自然语言，阿拉伯数字等）提供了语义基础。许多研究表明，近似数系统与顶叶，尤其是右侧顶内沟（intraparietal sulcus, IPS）有较高的关联[13, 14]。并且，编码数字响应的神经元遵循韦伯-费希纳定律[15, 16]。也就是说，随着刺激数量的变大，区域的总神经相应将以对数规律上升。这个结论在非灵长类动物的单神经元电信号记录以及人的功能核磁共振实验中都得到了应证[17, 18]。另一个非符号感知的重要系统是物体追踪系统。这个神经系统主要和计数有关，负责区分和追踪不同的物体。该系统主要和顶叶皮层，视觉皮层，和颞顶交界处（temporoparietal junction, TPJ）有关[19, 20]。符号感知则更多涉及与视觉和注意力相关的脑区。数字符号在枕叶皮层被处理，随后在IPS映射为数量[21]。有趣的是，符号感知的神经响应会随着年龄、数学技能、教育水平改变。随着数学水平或熟悉程度的提升，顶叶，下部前额叶（inferior frontal cortex），和枕叶的激活会上升；而前额叶，前扣带回（anterior cingulate gyrus）的激活会下降[many citations]。这可能意味着随着数学能力的上升，顶叶和枕叶的自体化上升[22]，执行这些任务时所需的注意力减少。另一个对于人脑理解符号数字的重要维度是计数的技能。孩童用手指来数数似乎是稀松平常的事情，但是事实上，习得计数技能对于孩童掌握基本数字运算，理解符号数量的顺序关系都有着很大的作用[23]。更准确地说，计数代表着通过建立物体与符号数字（或者其他可代表数量的物体，如手指）之间的一一对应，随后迭代的共同遍历物体和符号数字，以至于物体迭代完毕之后所对应的符号数字就代表那堆物品的数量。这种知识被称为势原则（cardinal principle）[24]。研究表明，孩童习得势原则之后大大加速了符号数字的学习[25]。以上是目前学界对基本数量认知的一些重要结论。
+
+limitations?
+
+
+** 发展性计算障碍
+发展性计算障碍（developmental dyscalculia, DD）是一种影响数字认知和算术技能学习的发育性疾病。其通常表现为难以处理和加工数字，计算准确性差等。这些困难并不是智力发展问题、 感官系统损伤、精神或神经疾病、学习资源缺乏所导致的[27]。目前，全球大约5%-7%的人群患有计算障碍[28, 29]。对于发育性计算障碍的发病机制和神经基础，学界有诸多理论解释，但未有统一定论。其中有两个理论受到学界的广泛认可，其一是处理符号数字能力受损[30]。由于在患有DD的孩童中，符号数字能力受损较为广泛，所以有些研究认为该差异可以被用于DD的诊断[31]。另一个是处理或表达数量的能力受损（即ANS功能异常）[32]。虽然上述研究表明，这些系统的非常规激活与DD的发病强相关，但这些功能异常与DD的因果关系尚不明确。正是因为DD的发病与这些核心系统的受损有强烈的联系，研究DD人群与正常人群的神经表达差异成为了研究基本数量认知的绝佳切入点。
+
+
+** 我用的数据集
+
+dataset is the biggest, simple explain
+本研究在此工作的基础上，进行统计xxx，contribution
+throw away all hypothesis
+
+以上现象可能表明《interpretation》
+
+
+* 实验方法和材料
+** 数据集概况和被试分布
+为了使用高精度的神经响应数据研究数字在人脑中的表示，我们选择了Fu Yu Kwok, et. al发表的公开数据集进行实验。本数据发表于[1]，主要研究内容是发展性数学技能障碍(Developmental dyscalculia, DD)是否与非典型的大脑激活有关。该研究使用了3T功能核磁共振对68个新加坡的小学阶段参与者（平均年龄=8.95岁，标准差=0.34岁；男性30名）完成了扫描。参与者被分为了两组： 发展性计算障碍（DD）组和典型发展（TA）对照组。DD组包括30名儿童，这些儿童要么参与了数学学习支持（LSM）干预计划，要么在一年级时的标准化数学测试中成绩处于后10%。这两组儿童在任何时间点的数学评估中均无显著差异。TA组包括38名儿童，他们在一年级时的数学测试得分高于25百分位，并在年龄、性别、种族、民族和社会经济地位等方面与DD组儿童匹配。
 
 ** 实验任务
+该研究使用了三个实验任务：算术任务、匹配任务和视觉空间工作记忆任务。由于本文聚焦于研究符号数字与非符号数字在大脑中的初级语义表示，我们的研究仅使用匹配任务的数据。具体任务设计如下：
 
+每个参与者都完成了两轮试验，每轮试验包括三种条件的六个试验块（总共36个试验），每个试验块前都有一个带有示例刺激的提示，一个初始的注视块（6500毫秒）和一个结束的注视块（12000毫秒）。每个块包括一个条件的六个试验，带有平均1500毫秒的抖动试验间隔（ITI）。
+
+其中三种实验条件分别为：数字条件、形状条件、脸部匹配。每个条件中，参与者同时被呈现左右两个刺激（数字条件中为一个数字符号和一组点、形状条件中为两个形状、脸部匹配条件中为两个正面的亚洲面孔），并被要求判断这两个刺激是否相同，每个刺激呈现2000毫秒。对于其他实验细节与设计，请参考[1]，本文不再赘述。
+
+在后续实验中，形状匹配和脸部匹配条件将作为隐含基线，用来对比数字匹配任务相关的激活。值得一提的是，该工作中总是使用形状匹配或者脸部匹配条件作为基线。由于我们将数字匹配条件进一步细分，以下的实验中，我们不将实验条件和具体的形状或脸部匹配人物作对比，而仅仅使用隐含基线作为实验基准。
+
+值得一提的是，该工作中对DD和TA的组别分析结果几乎都对H_0（两组无明显差异）有强支持。这使得作者得出了DD和TA组无明显神经响应差异的结论。但是在匹配任务中，数字条件>形状条件的对比分析找出了三个显著的激活簇，而其余99.6%的体素都显示H_0。在本实验中，我们将在具体数字条件刺激的层面对这个结论进行分析。在对于人脑数字表示的研究中，我们可以认为DD和TA组无显著差异，将其归为一个组别进行研究。
+
+** 数据预处理和分析方法
+
+我们使用发布在[[https://openneuro.org/datasets/ds004791/versions/1.0.0][Openneuro]]的公开数据进行研究。该数据集已经经过去面处理。我们使用fMRIPrep[2, 3]对所有数据进行预处理。结构图像经过不均匀性校正并标准化至MNI标准空间（MNI-ICBM 152）。功能图像进行了切片时间校正，估算了头部运动参数，并与T1加权参考图像进行配准。BOLD时间序列也标准化至MNI标准空间，然后经过6毫米全宽半高（FWHM）高斯核的空间平滑处理。每一个被试的具体处理参数和细节详见附录。随后，我们使用nltools[4]，nilearn[5]等工具对每个被试的匹配任务响应进行了广义线性模型(GLM)建模。对每个条件下每个试验的预期BOLD信号使用双伽马血氧动力学响应函数（HRF）进行建模。
+
+为了研究与每个数字刺激（1-9）的响应，在GLM的建模过程中，我们保留形状、脸部匹配条件的回归变量，而将数字条件拆分。对于每个被试观看的左，右刺激所对应的数字分别建模，得到对应左，右9个数字共18个回归变量。为了排除干扰变量的影响，我们还加入了离散余弦变换（DCT），二阶线性趋势，头部运动，和尖峰所对应的回归变量。最终通过回归，得到每个回归变量（数字1-9的左右刺激、形状匹配、脸部匹配、干扰变量）所对应的beta值。
+
+通过这些处理步骤，我们能够获得更为可靠和一致的神经影像数据，为后续的分析奠定坚实的基础。我们使用的所有分析代码发布于[[https://github.com/PlaneTraveller/numbers-in-brain][GitHub]]。
+
+特殊性：我是把点和数一起分析的，得出的我也不知道是啥，是他俩共激活？
 
 * 实验结果与分析
+** 数字刺激的神经响应
+*** 单个数字刺激
+为了研究每个数字刺激在全脑的激活情况，我们首先对全体参与者（TA+DD）进行了组内t检验。每个数字刺激的t值如图x所示（p<0.001, uncorrected）。
+
+#+attr_latex: :width 0.6
+[[../../results/activation/full_unc_0.001_ttest/full_unc_0.001_5_ttest.png]]
+
+其中，数字1、2、3、4并未产生显著激活，而数字5、6、7、8、9均在前额叶（DLPFC），前扣带皮层（DACC），前脑岛（Dorsal Anterior Insula）处有显著激活。
+
+我们还对每个数字刺激对于TA、DD两个组别中的激活情况进行了双样本t检验（图x，p<0.001, uncorrected）。有趣的是，数字1在组内t检验中均没有明显激活，但是部分体素却在TA，DD组中有显著激活差异，并且没有体素在DD组中的激活低于TA组。而其他数字刺激均没有TA>DD组间差异。
+
+#+attr_latex: :width 0.6
+[[../../results/two_ttest/num_ttest/DD_full_TA_full_num_1_unc_0.001_contrast_ttest.png]]
+
+
+此外，我们还对奇偶对比的激活情况进行了探索。无论是全体参与者（TA+DD），还是对照组（TA），或计算障碍（DD）组内t检验都显示零假设成立。
+
+*** 数字刺激的线性对比
+
+我们假设某些脑区的激活程度与被试观看的数字大小存在线性相关性。为了验证此假设，我们计算了每个参与者的线性对比：使得每个数字激活的权重等于该数字的值，归一化使得和为零（c = [-4 -3 -2 -1 0 1 2 3 4]）。随后，在全体参与者（TA+DD）、TA、DD组内进行t检验。结果如图x所示（p<0.001, uncorrected）。
+
+#+attr_latex: :width 0.6
+[[../../results/group_contrasts/full_linear_relation_unc_0.001_ttest/full_linear_relation_unc_0.001_ttest.png]]
+
+#+attr_latex: :width 0.6
+[[../../results/group_contrasts/DD_full_linear_relation_unc_0.001_ttest/DD_full_linear_relation_unc_0.001_ttest.png]]
+
+#+attr_latex: :width 0.6
+[[../../results/group_contrasts/TA_full_linear_relation_unc_0.001_ttest/TA_full_linear_relation_unc_0.001_ttest.png]]
+
+对于全体参与者组别，存在许多显著支持线性关系的体素。其中随数字大小增加而显著线性激活的区域主要集中在前额叶皮质，前额叶（DLPFC），前扣带皮层（DACC），前脑岛（Dorsal Anterior Insula）,etc,而随数字大小增加而显著抑制的区域则集中在枕叶皮层（？）。由此可见，数字刺激在人脑中的表示存在非严格线性关系。
+
+TA组的试验结果与其类似，主要的激活/抑制区域相同。然而在DD组中，不存在显著的视觉皮层抑制效果，且前额叶及前脑岛的激活区域小于TA组。
+
+
+** 针对数字刺激对比的DD/TA组别分析
+*** 数字刺激的线性对比
+随后，我们进行DD/TA组间的线性对比差异研究。类似的，使用双采样t测试绘制对比显著（p<0.001）的激活图像。与预期相悖的是，在枕叶皮层并未观察到显著差异。但是，在右侧视觉腹侧流中有一显著抑制区域。
+
+#+attr_latex: :width 0.6
+[[../../results/two_ttest/DD_full_TA_full_linear_relation_unc_0.001_ttest.png]]
+
+
+*** 基于线性对比的多体素模式分析
+为了进一步探索该对比与DD/TA组别差异的相关性，我们就这一线性对比进行多体素模式分析。具体的分类模型选择线性核的支持向量机（SVM），而特征则选择所有线性对比的组间显著性p<0.05的所有体素。5折交叉验证准确性为0.84。
+
+
 * 讨论
+可能的问题：这片文献没有禁止数数！http://www.xml-data.org/XYYXWYJ/html/2019/4/2019-4-512.htm#b%E7%8E%8B%E8%8A%B32012
+这片文献禁止了数数
 
 * Ref
 1. https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495
+2. https://www.nature.com/articles/s41592-018-0235-4
+3. https://www.nature.com/articles/s41596-020-0327-3
+4. nltools
+5. nilearn
+6. [[https://www.sciencedirect.com/science/article/pii/S1878929321000244][TCM developmental]]
+7. [[https://www.sciencedirect.com/science/article/abs/pii/001002779290049N][original tcm]]
+8. [[https://www.unicog.org/publications/DehaeneCohen_TripleCodeModelNumberProcessing_MathCognition1995.pdf][original tcm 2]]
+9. [[http://www.nrdc.org.uk/wp-content/uploads/2005/01/Does-numeracy-matter-more.pdf][numeracy importance]]
+10. [[https://www.oecd-ilibrary.org/education/skills-matter_9789264258051-en][oecd skills]]
+11. [[https://www.sciencedirect.com/science/article/pii/S1364661310002159][start-up tools]]
+12. [[https://pubmed.ncbi.nlm.nih.gov/1511583/][OG numerical abilities]]
+13. [[https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.0040125][Neural correlate of ANS]]
+14. [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5242404/][Neural tuning]]
+15. [[https://www.researchgate.net/publication/8020813_Counting_on_neurons_The_neurobiology_of_numerical_competence][counting on numbers]]
+16. [[Dehaene, S. The neural basis of the Weber-Fechner law: a logarithmic mental number line. Trends Cogn. Sci. 7, 145–147 (2003).][log number line]]
+17. [[https://pubmed.ncbi.nlm.nih.gov/12526780/][fmri approx numerosity fMRI]]
+18. [[https://pubmed.ncbi.nlm.nih.gov/12526780/][primate pfc weber]]
+19. [[https://pubmed.ncbi.nlm.nih.gov/17958487/][tpj number comparison]]
+20. [[https://pubmed.ncbi.nlm.nih.gov/20350059/][tpj in attention]]
+21. [[https://pubmed.ncbi.nlm.nih.gov/22723349/][math, monkey]]
+22. [[https://www.sciencedirect.com/science/article/pii/S187892931400084X][developmental specialization]]
+23. [[https://link.springer.com/book/10.1007/978-1-4612-3754-9][book about children counting and number concept]]
+24. [[https://pubmed.ncbi.nlm.nih.gov/29185879/][cardinality principle, 2018 worth reading]]
+25. [[https://www.sciencedirect.com/science/article/pii/S0010027718300945][cardinality accelirates symbolic number understanding]]
+26. [[https://www.frontiersin.org/articles/10.3389/fnhum.2020.00272/full][review on brain-dd relation (2020)]]
+27. [[https://icd.who.int/browse/2024-01/mms/en#308101648][who definition of dd]]
+28. [[https://dsm.psychiatryonline.org/doi/book/10.1176/appi.books.9780890425596][dd percentage abroad]]
+29. [[https://psybeh.tjnu.edu.cn/CN/abstract/abstract1938.shtml][chinese dd population]]
+30. [[https://www.sciencedirect.com/science/article/abs/pii/S0891422217300719][Symbolic number processing dd]]
+31. [[https://onlinelibrary.wiley.com/doi/abs/10.1111/mbe.12268][symbolic used for diagnosis]]
+32. [[https://www.researchgate.net/publication/51169475_Dyscalculia_From_Brain_to_Education][ans -- dd]]
+
+* Main ROIs
+- 50 PFC: 23=anterior fronto-parietal (dlpfc, dacc)
+- 50 left: 34 = Nacc
+- 5 Insula: dorsal anterior insula
+- 5 bottom: 5=TPJ posterior supra marginal/angular gyrus
+- -13 PFC: 32 = vmPFC
+- the important region: PCC, v2, parahippocampus/Fusiform
+
+** Functions
+- cingulate: domain general

@@ -1,9 +1,89 @@
 #+title: Related work
 
-* [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8302738/][Review on dynamics of numerical and arithmetic abilities]]
+* Papers
+- [[https://www.sciencedirect.com/science/article/pii/S1878929321000244][TCM developmental]]
+* [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8302738/][Core]]
+** Info
+- 2021
+- Developmental brain dynamics of numerical and arithmetic abilities
+*** Structure
+- Brain structures for Numerical & Arithmetic
+- Numerical (quantity, symbolic)
+- Arithmetic
+- Dyscalculia
+** Dump
 - good intro!
 - structure and meaning of numbers
 - manipulations of numbers
 - neurocognitive development
 - atypical development, i.e., in dyscalculia
+** Intro
+- skill is just as important as literacy [1]
+- deficits in these abilities have effect on well-being and economy [2]
+- dyscalculia percentage [4]
+** Brain network
+- whole brain [6], cognitive abilities7, representational dimensions8, and brain regions9.
+- domain-specific and domain-general functions
+** Numerical (Quantity)
+- nonverbally quantify objects (numerosity) is domain specific precursor for the development of numerical and arithmetic abilities [31, 32]
+- 2 systems: Approximate number system; object-tracking system [33, 34]
+- causal relationship with symbolic and arithmetic is debated
+*** Apporximate number system
+- approx: intuitive quantity sense is central in triple-code [32] (semantic basis)
+- functinoal specialization in parietal cortex to represent quantities [23, 47]
+- ips across age: [40, 45, 46, 48, 49]
+- Weber's law: change in stimulus response is proportional to initial stimulus response [50, 51] <NEED TO READ> (logorithmic change)
+- proof that approx system is unidirectional foundatino for symbolic and arithmetic is weak [35, 63, 64]
+*** Object tracking system
+- object boundaries, predict movements, retain in working memory
+- domain general visual-spatial [31, 34]
+- important primitive for counting! (subitizing) [67]
+- rois (inferior parietal cortex, posterior, occipital, tpj) [68-71]
+- parietal: enumeration
+- TPJ: attention to salient object properties
+** Numerical (Symbolic)
+- number symbols are processed in occipital and mapped onto quantities in IPS [31, 76]
+- specific regions of visual cortex are responsive to number symbols [79]
+- l/r occipitotemporal cortex, close to fusiform [79-81]
+- activity in l/r occipitotemporal cortices reflect increased efficiency to process visual number symbols [83]
+- brain processes numerical quantities in the same brain region, independent of notation [84]
+- The activation of brain regions outside the parietal cortex is substantially greater in children compared to adults [87]
+- pfc: aux function or direct encoding of symbolic-quantity info [47, 89]
+- developmental specialization to process symbolic: age/education -> increase in parietal, IFC, occipital [14, 30, 94, 95]
+- age/education -> decrease in anterior cingulate [30, 87, 95] (reduce attention and memory load)
+- related to multiple knowledge dimensions! [98]
+*** Knowledge of numerical order
+-?
+*** Counting: the bridge to arithmetic?
+- understanding order in number words is delayed in some populatino [110]
+- cardinal principle [111]
+- counting -> spacial representation of numbers [13, 112, 113]
+- symbolic numerical knowledge accelerates after children master cardinal principle
+- enumeration of larger sets: fronto-parietal regions; smaller: temporal-parietal, TPJ [75]
+** Dyscalculia
+- 5-7% dyscalculia [4]
+- not sensory/intellectual/mental/neuro conditions [4]
+- difficulties in arithmetic strategy use are hallmark of dyscalculia [140, 142]
+- impairments in symbolic number processing, used for diagnostic [143, 144] [145-147]
+- unclear about neural correlate: dyscalculiais cause or consequence?
+- predominant domain-specific thm: deficit to process/represent quantities [148]
+- deficit to access quantities via symbolic representations [150]
+- domain-general: working memory, executive func
+- difficulties to inhibit irrelevant info in working memory causes poor performances in arithmetic and maths [140]
+- deactivation in functional organization associated with nonsymbolic and symbolic processing (IPS) [153-155, 78 151 152]
+- IPS: core deficit hypothesis
+- + activation in l IPS, frotal cortex, visual areas for DD (they use additional cognitive control resources to compensate!) [17, 106, 153, 156]
+- biomarker for diagnosis [159]
+
+* [[https://www.researchgate.net/publication/8020813_Counting_on_neurons_The_neurobiology_of_numerical_competence][Counting on Neurons]]
+** Dump:
+- Similarly, fMRI tuning curves in human studies seem to be well described on a logarithmic scale [55], which indicates that the non-verbal ‘number line’ is nonlinearly compressed. Logarithmic encoding of numerosity is also indicated by neural network models [61,62]
 -
+
+
+* Paper note
+- Start by talking about how important numbers are, say problems with their deficit, importance of dd, finally benifits of studying numbers through dd
+
+* Structure
+- understanding mechanisms of number skills is crucial for both economy and theoretical development (neuroscience and AI)
+- DD is both a notable problem to be solved, and also a good tools for understanding

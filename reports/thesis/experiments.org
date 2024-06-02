@@ -1,0 +1,50 @@
+#+title: Experiments
+
+* 实验结果与分析
+** 数字刺激的神经响应
+*** 单个数字刺激
+为了研究每个数字刺激在全脑的激活情况，我们首先对全体参与者（TA+DD）进行了组内t检验。每个数字刺激的t值如图x所示（p<0.001, uncorrected）。
+
+#+attr_latex: :width 0.6
+[[../../results/activation/full_unc_0.001_ttest/full_unc_0.001_5_ttest.png]]
+
+其中，数字1、2、3、4并未产生显著激活，而数字5、6、7、8、9均在前额叶（DLPFC），前扣带皮层（DACC），前脑岛（Dorsal Anterior Insula）处有显著激活。
+
+我们还对每个数字刺激对于TA、DD两个组别中的激活情况进行了双样本t检验（图x，p<0.001, uncorrected）。有趣的是，数字1在组内t检验中均没有明显激活，但是部分体素却在TA，DD组中有显著激活差异，并且没有体素在DD组中的激活低于TA组。而其他数字刺激均没有TA>DD组间差异。
+
+#+attr_latex: :width 0.6
+[[../../results/two_ttest/num_ttest/DD_full_TA_full_num_1_unc_0.001_contrast_ttest.png]]
+
+
+此外，我们还对奇偶对比的激活情况进行了探索。无论是全体参与者（TA+DD），还是对照组（TA），或计算障碍（DD）组内t检验都显示零假设成立。
+
+*** 数字刺激的线性对比
+evidence?
+counting?
+
+我们假设某些脑区的激活程度与被试观看的数字大小存在线性相关性。为了验证此假设，我们计算了每个参与者的线性对比：使得每个数字激活的权重等于该数字的值，归一化使得和为零（c = [-4 -3 -2 -1 0 1 2 3 4]）。随后，在全体参与者（TA+DD）、TA、DD组内进行t检验。结果如图x所示（p<0.001, uncorrected）。
+
+#+attr_latex: :width 0.6
+[[../../results/group_contrasts/full_linear_relation_unc_0.001_ttest/full_linear_relation_unc_0.001_ttest.png]]
+
+#+attr_latex: :width 0.6
+[[../../results/group_contrasts/DD_full_linear_relation_unc_0.001_ttest/DD_full_linear_relation_unc_0.001_ttest.png]]
+
+#+attr_latex: :width 0.6
+[[../../results/group_contrasts/TA_full_linear_relation_unc_0.001_ttest/TA_full_linear_relation_unc_0.001_ttest.png]]
+
+对于全体参与者组别，存在许多显著支持线性关系的体素。其中随数字大小增加而显著线性激活的区域主要集中在前额叶皮质，前额叶（DLPFC），前扣带皮层（DACC），前脑岛（Dorsal Anterior Insula）,etc,而随数字大小增加而显著抑制的区域则集中在枕叶皮层（？）。由此可见，数字刺激在人脑中的表示存在非严格线性关系。
+
+TA组的试验结果与其类似，主要的激活/抑制区域相同。然而在DD组中，不存在显著的视觉皮层抑制效果，且前额叶及前脑岛的激活区域小于TA组。
+
+
+** 针对数字刺激对比的DD/TA组别分析
+*** 数字刺激的线性对比
+随后，我们进行DD/TA组间的线性对比差异研究。类似的，使用双采样t测试绘制对比显著（p<0.001）的激活图像。与预期相悖的是，在枕叶皮层并未观察到显著差异。但是，在右侧视觉腹侧流中有一显著抑制区域。
+
+#+attr_latex: :width 0.6
+[[../../results/two_ttest/DD_full_TA_full_linear_relation_unc_0.001_ttest.png]]
+
+
+*** 基于线性对比的多体素模式分析
+为了进一步探索该对比与DD/TA组别差异的相关性，我们就这一线性对比进行多体素模式分析。具体的分类模型选择线性核的支持向量机（SVM），而特征则选择所有线性对比的组间显著性p<0.05的所有体素。5折交叉验证准确性为0.84。

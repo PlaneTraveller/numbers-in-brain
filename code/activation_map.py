@@ -37,7 +37,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-# from classifier import load_data
 from subject_glm import estimate_subj_glm as get_glm
 from subject_glm import betas_ind
 from subject_glm import glm_ind
@@ -95,7 +94,7 @@ def number_ttest(
     )
     plt.close()
 
-    return thr_t
+    return res
 
 
 def activation_map(
@@ -130,6 +129,10 @@ def activation_map(
         with open(path_name, "wb") as f:
             pickle.dump(out, f)
         return out
+
+
+def calc_dist_mat(l, group, results_dir="../results/log_relation"):
+    return
 
 
 # =============================================================

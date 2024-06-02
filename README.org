@@ -167,7 +167,7 @@ A project exploring number and algebra representations in the human brain using 
 - [X] get familiar with bids accessing
 - [X] grasp data structure, content, dimensions
 - [X] how is it processed?
-** Fresh Stack
+** Fresh Stack (DONE)
 - [X] what tests to run, what package, tutorial? (spm)
 - [X] organize analysis (glm, contrast, classifier, region determ) (write down the hypothesis?)
 - [X] keep an eye on requirements (proj plan, title), learn what a finished proj looks like
@@ -192,16 +192,19 @@ A project exploring number and algebra representations in the human brain using 
 - [X] paper plan
 - [X] organize result (what I plan to investigate)
 - [X] figure out what ROI does, what classifier does (mvpa)
-* Tomorrow
-- [ ] perform mvpa to examine activation differences
-- [ ] extract ROI (post-hoc)
-- [ ] revamp paper
-
-* Today
-- [ ] finish paper draft (1h)
-- [ ] fill out intro (2h)
-- [ ] start experiment part (1h)
-- [ ] start intro skeleton (1h)
+- [X] perform mvpa to examine activation differences
+- [X] extract ROI (post-hoc)
+- [X] revamp paper
+- [X] finish paper draft (1h)
+- [X] fill out intro (2h)
+- [X] why is it that the second beta value is the one for t-test?
+- [X] train svm to do classification on contrast
+- [X] talairach roi
+- [X] https://nltools.org/auto_examples/01_DataOperations/plot_mask.html
+- [X] https://neurovault.org/
+- [X] https://neurovault.org/images/395092/ (solvs the roi problem!)
+- [X] start experiment part (1h)
+- [X] start intro skeleton (1h)
 - [X] finish whole brain level analysis
 - [X] ta/dd contrast (odd-even, big-num, etc) t-test (subj level) (easy)
 - [X] dd/ta contrast (easy, just change grouping (paired-t-test))
@@ -212,3 +215,36 @@ A project exploring number and algebra representations in the human brain using 
 - [X] learn it generally (15)
 - [X] speed learn maths (30)
 - [X] find paper-code balance
+** Final Stack
+- [ ] start analysis
+- [ ] send data
+- [ ] find way to print ROI
+- [X] finish intro
+- [ ] finish matrix
+- [X] refactor! first collect what I've saved before, then refactor data loader
+- [X] find metric for it
+
+* Today
+- [ ] have 3 matrices for the 3 groups
+- [ ] only do within group analysis
+- [ ] 1-9/1-9, find a number for each square
+- [ ] figure out how to get one number (svm, euclid distance)
+
+
+* Notes
+- number activation: against baseline
+- TA vs DD: do fdr
+
+* Q
+- to test log activation, what does the dm look like
+- test if the voxels that responds to stimulations with a log relationship would differ significantly between the two groups
+- try explore if they know how to count
+
+* tmp
+** 发展性计算障碍
+发展性计算障碍（developmental dyscalculia, DD）是一种影响数字认知和算术技能学习的发育型疾病。
+其通常表现为难以处理和加工数字，计算准确性差等。这些困难并不是智力发展问题、
+感官系统损伤、精神或神经疾病、学习资源缺乏所导致的[27]。目前，全球大约5%-7%的人群患有计算障碍[28, 29]。
+一些研究认为，计算障碍是处理符号数字的能力受损导致的[30]，由于该损伤**很难随时间改变**，该差异可以被用于DD的诊断[31]；
+另一些研究表明，处理或表达数量的能力受损（即ANS功能异常[32]）与DD有很强的相关性。
+根据上述理论，DD可以被认为是数字认知缺失的重要体现，是研究基本数字认知的绝佳切入点，
