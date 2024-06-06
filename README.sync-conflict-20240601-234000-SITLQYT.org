@@ -95,8 +95,6 @@ A project exploring number and algebra representations in the human brain using 
 - [[https://neurovault.org][Neurovault (ROI masks), nltools]]
 - [[https://neurostars.org][Neurostars forum]]
 - [[https://enigma-toolbox.readthedocs.io/en/latest/index.html][Enigma Toolbox]]
-- [[https://neurovault.org/images/395092/][ROIs]]
-- [[https://www.doi2bib.org/bib/https://doi.org/10.1176/appi.books.9780890425596][doi2bib]]
 
 
 * Tasks
@@ -170,9 +168,6 @@ A project exploring number and algebra representations in the human brain using 
 - [X] grasp data structure, content, dimensions
 - [X] how is it processed?
 ** Fresh Stack (DONE)
-:PROPERTIES:
-:VISIBILITY: folded
-:END:
 - [X] what tests to run, what package, tutorial? (spm)
 - [X] organize analysis (glm, contrast, classifier, region determ) (write down the hypothesis?)
 - [X] keep an eye on requirements (proj plan, title), learn what a finished proj looks like
@@ -208,7 +203,6 @@ A project exploring number and algebra representations in the human brain using 
 - [X] https://nltools.org/auto_examples/01_DataOperations/plot_mask.html
 - [X] https://neurovault.org/
 - [X] https://neurovault.org/images/395092/ (solvs the roi problem!)
-- [X] https://neurovault.org/images/14257/
 - [X] start experiment part (1h)
 - [X] start intro skeleton (1h)
 - [X] finish whole brain level analysis
@@ -221,71 +215,26 @@ A project exploring number and algebra representations in the human brain using 
 - [X] learn it generally (15)
 - [X] speed learn maths (30)
 - [X] find paper-code balance
-- [X] send data
-** Final Stack (DONE)
-:PROPERTIES:
-:VISIBILITY: folded
-:END:
-- [X] new mat
-- [X] final check
-- [X] get title
-- [X] finish abstract
-- [X] finish discussion
-- [X] do analysis
-- [X] start analysis
-- [X] find way to print ROI
-- [X] make better pictures
-- [X] svm: box plots of accuracy vs condition (just plot the 10 times and a table for the params)
-- [X] within group: done?
-- [X] bigsmall within group (1 + 2 or 3?)
-- [X] activation map comparison (same as before)
-- [X] activation map for all numbers (9 pics, in a block)
-- [X] write experiment report part
-- [X] finish fixing!
-- [X] finish new expts
-- [X] gather the story: contributions, topics of exploration, things I've done, results, Know what I need to do
-- [X] finish current progress (latex w. citation, pics, tables)
-- [X] get one iteration of latex done
+** Final Stack
+- [ ] start analysis
+- [ ] send data
+- [ ] find way to print ROI
 - [X] finish intro
-- [X] finish matrix
-- [X] refactor! first collect what I've saved before, then refactor data loader
+- [ ] finish matrix
 - [X] find metric for it
 
-** Final Final Stack
-- [ ] finish draft (try hit 15 pgs) (an addition of 6 pages)
-- [ ] chores
-- [ ] acknoledgements
-- [X] organize todo
-- [ ] add results (+1)
-- [ ] try listing t-values, examine statistical significance of svm study
-- [ ] add methods (+2)
-- [ ] explain maths of methods used (ttest, two leveled GLM equations, mvpa)
-- [ ] add pipeline figure
-- [ ] add experiment modality figure (dataset explanation)
-- [ ] add intro (+2)
-- [ ] add fmri, neuroimaging part (bold, etc)
-- [ ] add figures in intro (weber's law, etc)
-- [ ] expand and explain tcm
-- [ ] expand intro of intro (big to small)
-- [X] chores (citations)
+* Today
+- [ ] have 3 matrices for the 3 groups
+- [ ] only do within group analysis
+- [ ] 1-9/1-9, find a number for each square
+- [ ] figure out how to get one number (svm, euclid distance)
+
 
 * Notes
-** Intro
-- visual perception to smaller details (从大到小)
-- add figures
-- 引言 expand
-- tcm explain
-- explain fMRI used (mvpa usage)
+- number activation: against baseline
+- TA vs DD: do fdr
 
-** Methods
-- pipeline figure
-- add figure for experiment modality
-- explain t-test maths
-- equation for GLM
-- explain mvpa
-
-** Results
-- [X] figure should use one color bar
-- list the t-values (top activation, etc)
-- use permutation test to test svm
-- discuss why it can't work
+* Q
+- to test log activation, what does the dm look like
+- test if the voxels that responds to stimulations with a log relationship would differ significantly between the two groups
+- try explore if they know how to count

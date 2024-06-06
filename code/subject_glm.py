@@ -369,8 +369,19 @@ def number_cond(numbers, main_task="NumberMatching"):
     return condition
 
 
+def shape_cond(s):
+    try:
+        return s.split("_")[0] == "ShapeMatching"
+    except:
+        return False
+
+
 def betas_ind(glm_result, numbers, main_task="NumberMatching"):
     return glm_ind(glm_result, number_cond(numbers, main_task=main_task), "beta")
+
+
+def shape_ind(glm_result):
+    return glm_ind(glm_result, shape_cond, "beta")
 
 
 def p_ind(glm_result, numbers, main_task="NumberMatching"):

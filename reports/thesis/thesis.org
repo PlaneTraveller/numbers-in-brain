@@ -18,6 +18,7 @@
 
 * Note
 - activation in pfc decrease the better they are at maths (less attention required)
+
 * Outline
 ** Abstract
 
@@ -81,43 +82,25 @@ studying number representations may give a new perspective of identifying neural
 * Insignts
 - connections to linguistics: the 10 numbers
 
-
-* stack
-- [ ] read iccc for p1
-- [ ] read myfollow for p2, p1
-- [ ] find one more paper for covering dd (read core first)
-- [X] read core for p1, p3
-
-
 * 摘要
 
 * 引言
 
 核心：借助DD/TA差异来研究数字表示
 
-
 基本数量认知是现代人类思维活动的基石。更好的理解人脑处理数字信息、进行数字运算、以及对数量产生感受的神经机制有着巨大的意义。从个人角度而言，缺乏数量认知会大幅度影响人的就业情况和竞争力。有研究表明，基本数量认知和识字能力对于自我价值实现几乎同等重要[9]。从国家角度而言，数学障碍会导致严重的就业限制，影响经济发展[10]。
 
 ** 基本数量认知
 目前，学术界对于数量认知的主流模型是三重编码模型[7, 8]。该理论囊括了数量认知的方方面面，其中包括人脑对非符号数量和符号数字的感知使用的神经机制。非符号数量感知指的是人对不使用语言或数字的数量的直观感知能力。对数量的抽象感知能力是数字理解能力，数学运算能力发展的重要先决条件之一[11]。而符号数量感知指的是人将抽象的数学符号（如阿拉伯数字，自然语言中的数字等）转换成数量的能力。近二十年来，有许多研究尝试明确这两个重要功能的神经机制，其中的一些重要结论改变了该领域对数量认知的理解。首先，近似数系统（Approximate Number System, ANS）是三重编码模型的核心[12]。它反映的是用直感去估计，区分物体数量的能力，为其他编码模式（自然语言，阿拉伯数字等）提供了语义基础。许多研究表明，近似数系统与顶叶，尤其是右侧顶内沟（intraparietal sulcus, IPS）有较高的关联[13, 14]。并且，编码数字响应的神经元遵循韦伯-费希纳定律[15, 16]。也就是说，随着刺激数量的变大，区域的总神经相应将以对数规律上升。这个结论在非灵长类动物的单神经元电信号记录以及人的功能核磁共振实验中都得到了应证[17, 18]。另一个非符号感知的重要系统是物体追踪系统。这个神经系统主要和计数有关，负责区分和追踪不同的物体。该系统主要和顶叶皮层，视觉皮层，和颞顶交界处（temporoparietal junction, TPJ）有关[19, 20]。符号感知则更多涉及与视觉和注意力相关的脑区。数字符号在枕叶皮层被处理，随后在IPS映射为数量[21]。有趣的是，符号感知的神经响应会随着年龄、数学技能、教育水平改变。随着数学水平或熟悉程度的提升，顶叶，下部前额叶（inferior frontal cortex），和枕叶的激活会上升；而前额叶，前扣带回（anterior cingulate gyrus）的激活会下降[many citations]。这可能意味着随着数学能力的上升，顶叶和枕叶的自体化上升[22]，执行这些任务时所需的注意力减少。另一个对于人脑理解符号数字的重要维度是计数的技能。孩童用手指来数数似乎是稀松平常的事情，但是事实上，习得计数技能对于孩童掌握基本数字运算，理解符号数量的顺序关系都有着很大的作用[23]。更准确地说，计数代表着通过建立物体与符号数字（或者其他可代表数量的物体，如手指）之间的一一对应，随后迭代的共同遍历物体和符号数字，以至于物体迭代完毕之后所对应的符号数字就代表那堆物品的数量。这种知识被称为势原则（cardinal principle）[24]。研究表明，孩童习得势原则之后大大加速了符号数字的学习[25]。以上是目前学界对基本数量认知的一些重要结论。
 
-limitations?
-
-
 ** 发展性计算障碍
 发展性计算障碍（developmental dyscalculia, DD）是一种影响数字认知和算术技能学习的发育性疾病。其通常表现为难以处理和加工数字，计算准确性差等。这些困难并不是智力发展问题、 感官系统损伤、精神或神经疾病、学习资源缺乏所导致的[27]。目前，全球大约5%-7%的人群患有计算障碍[28, 29]。对于发育性计算障碍的发病机制和神经基础，学界有诸多理论解释，但未有统一定论。其中有两个理论受到学界的广泛认可，其一是处理符号数字能力受损[30]。由于在患有DD的孩童中，符号数字能力受损较为广泛，所以有些研究认为该差异可以被用于DD的诊断[31]。另一个是处理或表达数量的能力受损（即ANS功能异常）[32]。虽然上述研究表明，这些系统的非常规激活与DD的发病强相关，但这些功能异常与DD的因果关系尚不明确。正是因为DD的发病与这些核心系统的受损有强烈的联系，研究DD人群与正常人群的神经表达差异成为了研究基本数量认知的绝佳切入点。
 
-
-** 我用的数据集
-
-dataset is the biggest, simple explain
-本研究在此工作的基础上，进行统计xxx，contribution
-throw away all hypothesis
-
-以上现象可能表明《interpretation》
+** 研究内容
+近年来，许多使用功能神经影像的方法研究DD神经机制的工作都存在样本量少，结果无法复现的问题[33]。而Fu Yu Kwok等人在2023年发表的工作是迄今为止规模最大的，数据质量最高的[?]。本研究在此工作的基础上，针对具体数字与数量认知进行粒度更细的统计研究和探索。本研究探索了单个数字，奇偶对比，数字大小对比在DD孩童与正常孩童中的激活情况。数据表明，患有DD的孩童与正常孩童相比，对于数字大小有差异相应的脑区激活情况存在显著差异。其他刺激和对比均无显著差异。
 
 
-* 实验方法和材料
+* 实验方法与材料
 ** 数据集概况和被试分布
 为了使用高精度的神经响应数据研究数字在人脑中的表示，我们选择了Fu Yu Kwok, et. al发表的公开数据集进行实验。本数据发表于[1]，主要研究内容是发展性数学技能障碍(Developmental dyscalculia, DD)是否与非典型的大脑激活有关。该研究使用了3T功能核磁共振对68个新加坡的小学阶段参与者（平均年龄=8.95岁，标准差=0.34岁；男性30名）完成了扫描。参与者被分为了两组： 发展性计算障碍（DD）组和典型发展（TA）对照组。DD组包括30名儿童，这些儿童要么参与了数学学习支持（LSM）干预计划，要么在一年级时的标准化数学测试中成绩处于后10%。这两组儿童在任何时间点的数学评估中均无显著差异。TA组包括38名儿童，他们在一年级时的数学测试得分高于25百分位，并在年龄、性别、种族、民族和社会经济地位等方面与DD组儿童匹配。
 
@@ -134,13 +117,12 @@ throw away all hypothesis
 
 ** 数据预处理和分析方法
 
-我们使用发布在[[https://openneuro.org/datasets/ds004791/versions/1.0.0][Openneuro]]的公开数据进行研究。该数据集已经经过去面处理。我们使用fMRIPrep[2, 3]对所有数据进行预处理。结构图像经过不均匀性校正并标准化至MNI标准空间（MNI-ICBM 152）。功能图像进行了切片时间校正，估算了头部运动参数，并与T1加权参考图像进行配准。BOLD时间序列也标准化至MNI标准空间，然后经过6毫米全宽半高（FWHM）高斯核的空间平滑处理。每一个被试的具体处理参数和细节详见附录。随后，我们使用nltools[4]，nilearn[5]等工具对每个被试的匹配任务响应进行了广义线性模型(GLM)建模。对每个条件下每个试验的预期BOLD信号使用双伽马血氧动力学响应函数（HRF）进行建模。
+我们使用发布在[[https://openneuro.org/datasets/ds004791/versions/1.0.0][Openneuro]]的公开数据进行研究。该数据集已经经过去面处理。我们使用fMRIPrep[2, 3]对所有数据进行预处理。结构图像经过不均匀性校正并标准化至MNI标准空间（MNI-ICBM 152）。功能图像进行了切片时间校正，估算了头部运动参数，并与T1加权参考图像进行配准。BOLD时间序列也标准化至MNI标准空间，然后经过6毫米全宽半高（full width at half maximum, FWHM）高斯核的空间平滑处理。每一个被试的具体处理参数和细节详见附录。随后，我们使用nltools[4]，nilearn[5]等工具对每个被试的匹配任务响应进行了广义线性模型(general linear model, GLM)建模。对每个条件下每个试验的预期BOLD信号使用双伽马血氧动力学响应函数（hemodynamic response function, HRF）进行建模。
 
-为了研究与每个数字刺激（1-9）的响应，在GLM的建模过程中，我们保留形状、脸部匹配条件的回归变量，而将数字条件拆分。对于每个被试观看的左，右刺激所对应的数字分别建模，得到对应左，右9个数字共18个回归变量。为了排除干扰变量的影响，我们还加入了离散余弦变换（DCT），二阶线性趋势，头部运动，和尖峰所对应的回归变量。最终通过回归，得到每个回归变量（数字1-9的左右刺激、形状匹配、脸部匹配、干扰变量）所对应的beta值。
+为了研究与每个数字刺激（1-9）的响应，在GLM的建模过程中，我们保留形状、脸部匹配条件的回归变量，而将数字条件拆分。对于每个被试观看的左，右刺激所对应的数字分别建模，得到对应左，右9个数字共18个回归变量。其中，每个数字刺激均有阿拉伯数字和点阵两种刺激形式。我们将这两种形式归为一类进行回归。为了排除干扰变量的影响，我们还加入了离散余弦变换（discrete cosine transformation, DCT），二阶线性趋势，头部运动，和尖峰所对应的回归变量。最终通过回归，得到每个回归变量（数字1-9的左右刺激、形状匹配、脸部匹配、干扰变量）所对应的beta值。
 
 通过这些处理步骤，我们能够获得更为可靠和一致的神经影像数据，为后续的分析奠定坚实的基础。我们使用的所有分析代码发布于[[https://github.com/PlaneTraveller/numbers-in-brain][GitHub]]。
 
-特殊性：我是把点和数一起分析的，得出的我也不知道是啥，是他俩共激活？
 
 * 实验结果与分析
 ** 数字刺激的神经响应
@@ -189,10 +171,44 @@ TA组的试验结果与其类似，主要的激活/抑制区域相同。然而�
 *** 基于线性对比的多体素模式分析
 为了进一步探索该对比与DD/TA组别差异的相关性，我们就这一线性对比进行多体素模式分析。具体的分类模型选择线性核的支持向量机（SVM），而特征则选择所有线性对比的组间显著性p<0.05的所有体素。5折交叉验证准确性为0.84。
 
+* 实验结果与分析（refactor）
+** 对单个数字的响应
+*** 组内基准对比
+all: Occipital, dlpfc, dacc, anterior mPFC, ifg, superior LOC, Dorsal Anterior Insula
+
+2, 3, 5: pcc
+
+1, 2, 3, 4: no pfc, insula, dacc
+*** 组间比较
+dlpfc, pcc, superior loc
+
+right Fusiform/parahippocampus & v2 ventral stream
+** 对大小数字的差异响应
+*** 组内激活情况
+*** 组间比较
+*** 基于大小对比的多体素模式分析
 
 * 讨论
+** result interpretation
+possible functional mechs behind DD
+
+- 小数不用额叶 (小数不需要注意力)
+- 只有数量1有区别 (在TA人群，包含1的问题退化成了物体识别问题，而在DD中没有),这一点也可以在baseline contrast里应征
+- 大小数字对比：TA知道数字越大，他和物体约不一样，但是DD没有这个差异，不会抑制物品(less logic, more visual)
+
+** possible problem
 可能的问题：这片文献没有禁止数数！http://www.xml-data.org/XYYXWYJ/html/2019/4/2019-4-512.htm#b%E7%8E%8B%E8%8A%B32012
-这片文献禁止了数数
+这片文献禁止了数数, cardinal principle
+
+modality (dots vs numbers)
+
+** Future work
+modality (dots vs numbers)
+log relation
+cluster level analysis
+
+
+
 
 * Ref
 1. https://onlinelibrary.wiley.com/doi/full/10.1002/hbm.26495
@@ -227,6 +243,7 @@ TA组的试验结果与其类似，主要的激活/抑制区域相同。然而�
 30. [[https://www.sciencedirect.com/science/article/abs/pii/S0891422217300719][Symbolic number processing dd]]
 31. [[https://onlinelibrary.wiley.com/doi/abs/10.1111/mbe.12268][symbolic used for diagnosis]]
 32. [[https://www.researchgate.net/publication/51169475_Dyscalculia_From_Brain_to_Education][ans -- dd]]
+33. Button, K. S., Ioannidis, J. P. A., Mokrysz, C., Nosek, B. A., Flint, J., Robinson, E. S. J., & Munafò, M. R. (2013). Power failure: Why small sample size undermines the reliability of neuroscience. Nature Reviews Neuroscience, 14(5), 365–376.
 
 * Main ROIs
 - 50 PFC: 23=anterior fronto-parietal (dlpfc, dacc)

@@ -4,6 +4,9 @@ from subject_glm import estimate_subj_glm as get_glm
 from subject_glm import betas_ind
 from helpers import get_dd
 from math import log
+from random import sample
+from random import seed
+from os import makedirs
 
 import functools as ft
 
@@ -62,11 +65,11 @@ def number_contrast(glm_result, contrast, results_dir="../results/subj_contrasts
     # out = sum(g1_dict.values()) / len(contrast["g1"]) - sum(g2_dict.values()) / len(
     #     contrast["g2"]
     # )
-    out.plot()
-    plt.savefig(
-        os.path.join(results_dir, f"{subj}_" + contrast["name"] + "_contrast.png")
-    )
-    plt.close()
+    # out.plot()
+    # plt.savefig(
+    #     os.path.join(results_dir, f"{subj}_" + contrast["name"] + "_contrast.png")
+    # )
+    # plt.close()
     return out
 
 
@@ -106,8 +109,8 @@ def view_number_contrast(
     # thr_t = res["thr_t"]
     # thr_t.plot(view="mni", colorbar=True)
 
-    with open(path_name, "wb") as f:
-        pickle.dump(contrasts, f)
+    # with open(path_name, "wb") as f:
+    #     pickle.dump(contrasts, f)
 
     return contrasts
 
@@ -146,13 +149,18 @@ def one_group_significance(
 
     res = contrasts.ttest(threshold_dict=threshold_dict)
     thr_t = res["thr_t"]
-    thr_t.plot(view="mni", colorbar=True)
+    thr_t.plot(
+        view="mni",
+        colorbar=True,
+        **{"vmin": -7.9, "vmax": 7.9},
+    )
     plt.savefig(
         os.path.join(
             dir_name,
             f"{group_desc}_{contrast['name']}_{thr_method}_{thr_value}_ttest.png",
         )
     )
+    plt.close()
 
     with open(path_name, "wb") as f:
         pickle.dump(thr_t, f)
@@ -165,18 +173,21 @@ def two_sample_ttest(
     g1,
     g2,
     contrast,
+    silent=False,
     design="contrast",
     p_value=0.001,
     results_dir="../results/two_ttest",
 ):
-    path_name = os.path.join(
-        results_dir,
-        f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{design}_data.pkl",
-    )
-    if os.path.exists(path_name):
-        with open(path_name, "rb") as f:
-            data = pickle.load(f)
+    # path_name = os.path.join(
+    #     results_dir,
+    #     f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{design}_data.pkl",
+    # )
+    # if os.path.exists(path_name) and not silent:
+    #     with open(path_name, "rb") as f:
+    #         data = pickle.load(f)
 
+    if False:
+        pass
     else:
         contrasts1 = view_number_contrast(l, g1, 1, contrast) + view_number_contrast(
             l, g1, 2, contrast
@@ -200,6 +211,8 @@ def two_sample_ttest(
         data.X = dm
         labels = [g1["desc"]] * n1 + [g2["desc"]] * n2
         data.Y = pd.DataFrame(labels)
+        if silent:
+            return data
 
     # Fit the regression model
     stats = data.regress()
@@ -215,27 +228,31 @@ def two_sample_ttest(
         thr_method = "unc"
         thr_value = p_value
         thresholded_t_map = threshold(t_map, p_map, p_value)
-        thresholded_t_map.plot(view="mni", colorbar=True)
-        plt.savefig(
-            os.path.join(
-                results_dir,
-                f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{thr_method}_{thr_value}_{design}_ttest.png",
+        if not silent:
+            thresholded_t_map.plot(view="mni", colorbar=True)
+            plt.savefig(
+                os.path.join(
+                    results_dir,
+                    f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{thr_method}_{thr_value}_{design}_ttest.png",
+                )
             )
-        )
+            plt.close()
     elif design == "group":
         t_map = stats["t"][1]
         p_map = stats["p"][1]
         thr_method = "unc"
         thr_value = p_value
         thresholded_t_map = threshold(t_map, p_map, p_value)
-        thresholded_t_map.plot(view="mni", colorbar=True)
-        plt.savefig(
-            os.path.join(
-                results_dir,
-                f"{g2['desc']}_{contrast['name']}_{thr_method}_{thr_value}_{design}_ttest.png",
+
+        if not silent:
+            thresholded_t_map.plot(view="mni", colorbar=True)
+            plt.savefig(
+                os.path.join(
+                    results_dir,
+                    f"{g2['desc']}_{contrast['name']}_{thr_method}_{thr_value}_{design}_ttest.png",
+                )
             )
-        )
-        plt.close()
+            plt.close()
         t_map0 = stats["t"][0]
         p_map0 = stats["p"][0]
         thresholded_t_map0 = threshold(t_map0, p_map0, p_value)
@@ -246,9 +263,11 @@ def two_sample_ttest(
                 f"{g1['desc']}_{contrast['name']}_{thr_method}_{thr_value}_{design}_ttest.png",
             )
         )
+        plt.close()
 
-    with open(path_name, "wb") as f:
-        pickle.dump(data, f)
+    # if not silent:
+    #     with open(path_name, "wb") as f:
+    #         pickle.dump(data, f)
 
     return data
 
@@ -297,6 +316,7 @@ def classify_contrast(
             f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_p-{p_value}_n-{n_folds}_mask.png",
         )
     )
+    plt.close()
     data = data.apply_mask(mask)
     print("Length of data is " + str(len(data.Y)))
     stats = data.predict(
@@ -309,6 +329,131 @@ def classify_contrast(
         pickle.dump(data, f)
 
     return data
+
+
+def grouped_classify(
+    l,
+    g1,
+    g2,
+    contrast,
+    sd,
+    algorithm="svm",
+    mask_sample_size=5,
+    algo_args={"kernel": "linear"},
+    n_folds=7,
+    p_value=0.001,
+    results_dir="../results/grouped_classifier",
+):
+    seed(sd)
+    path_name = os.path.join(
+        results_dir,
+        f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_classifier.pkl",
+    )
+    if os.path.exists(path_name):
+        with open(path_name, "rb") as f:
+            result = pickle.load(f)
+            return result
+
+    else:
+        pass
+    mask_g1 = sample(g1["subjs"], mask_sample_size)
+    mask_g2 = sample(g2["subjs"], mask_sample_size)
+    print(mask_g1)
+    svm_g1 = [x for x in g1["subjs"] if x not in mask_g1]
+    svm_g2 = [x for x in g2["subjs"] if x not in mask_g2]
+
+    mask_g1 = {"desc": "mask_g1", "subjs": mask_g1}
+    mask_g2 = {"desc": "mask_g2", "subjs": mask_g2}
+    svm_g1 = {"desc": g1["desc"] + "_svm", "subjs": svm_g1}
+    svm_g2 = {"desc": g2["desc"] + "_svm", "subjs": svm_g2}
+
+    data = two_sample_ttest(l, svm_g1, svm_g2, contrast, silent=True)
+    mask_dat = two_sample_ttest(l, mask_g1, mask_g2, contrast, silent=False)
+
+    stats = mask_dat.regress()
+
+    # Threshold the t-values by p-value
+    t_map = stats["t"][1]  # t-map for the group difference
+    p_map = stats["p"][1]  # p-map for the group difference
+    thresholded_t_map = threshold(t_map, p_map, p_value)
+
+    # switch to nifti
+    mask = thresholded_t_map.to_nifti()
+    # turn into true/false
+    bool_mask = mask.get_fdata() != 0
+    mask = nib.Nifti1Image(bool_mask.astype(np.float32), affine=mask.affine)
+
+    # visualize the mask
+    thresholded_t_map.plot(view="mni", colorbar=True)
+    plt.savefig(
+        os.path.join(
+            results_dir,
+            f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_p-{p_value}_n-{n_folds}_mask.png",
+        )
+    )
+    plt.close()
+    data = data.apply_mask(mask)
+    print("Length of data is " + str(len(data.Y)))
+
+    stats = data.predict(
+        algorithm=algorithm,
+        cv_dict={"type": "kfolds", "n_folds": n_folds, "n": len(data.Y)},
+        plot=False,
+        **algo_args,
+    )
+    result = {"mask_group": [mask_g1, mask_g2], "stats": stats}
+    with open(path_name, "wb") as f:
+        pickle.dump(result, f)
+
+    return result
+
+
+def run_grouped_classify(
+    l,
+    g1,
+    g2,
+    contrast,
+    mask_sample_size=5,
+    samples=10,
+    rd_seed=42,
+    n_folds=7,
+    p_value=0.001,
+    results_dir="../results/grouped_classifier/run",
+):
+    results_dir += str(rd_seed)
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+    # seed(rd_seed)
+    path_name = os.path.join(
+        results_dir,
+        "f{g1['desc']}_{g2['desc']}_{contrast['name']}_n-{n_folds}_p-{p_value}_classifier.pkl",
+    )
+    if os.path.exists(path_name):
+        with open(path_name, "rb") as f:
+            results = pickle.load(f)
+        return results
+    results = []
+    for i in range(samples):
+        inner_path_name = os.path.join(results_dir, f"sample_{i}")
+        if not os.path.exists(inner_path_name):
+            os.makedirs(inner_path_name)
+
+        sd = rd_seed * 100 + i
+        res = grouped_classify(
+            l,
+            g1,
+            g2,
+            contrast,
+            sd=sd,
+            mask_sample_size=mask_sample_size,
+            n_folds=n_folds,
+            p_value=p_value,
+            results_dir=inner_path_name,
+        )
+        results.append(res)
+    with open(path_name, "wb") as f:
+        pickle.dump(results, f)
+    return results
 
 
 def searchlight(
@@ -354,6 +499,7 @@ def searchlight(
             f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_mask.png",
         )
     )
+    plt.close()
 
     # data = data.apply_mask(mask)
     stats = data.predict_multi(
@@ -505,13 +651,18 @@ if __name__ == "__main__":
 
     # list(map(num_tsttest, num_contrasts))
 
-    my_ttest = ft.partial(one_group_significance, l, threshold_dict={"unc": 0.001})
-    my_ttest(new_log_relation, full_group)
-    my_ttest(new_log_relation, dd_group)
-    my_ttest(new_log_relation, ta_group)
-    my_ttest(new_linear_relation, full_group)
-    my_ttest(new_linear_relation, dd_group)
-    my_ttest(new_linear_relation, ta_group)
+    my_ttest = ft.partial(
+        one_group_significance,
+        l,
+        threshold_dict={"unc": 0.001},
+        results_dir="../results/group_contrasts/new",
+    )
+    # my_ttest(new_log_relation, full_group)
+    # my_ttest(new_log_relation, dd_group)
+    # my_ttest(new_log_relation, ta_group)
+    my_ttest(linear_relation, full_group)
+    my_ttest(linear_relation, dd_group)
+    my_ttest(linear_relation, ta_group)
     # my_ttest(even_odd, full_group)
     # my_ttest(even_odd, dd_group)
     # my_ttest(even_odd, ta_group)
@@ -519,8 +670,8 @@ if __name__ == "__main__":
     # my_ttest(big_small, dd_group)
     # my_ttest(big_small, ta_group)
 
-    two_sample_ttest(l, dd_group, ta_group, new_log_relation)
-    two_sample_ttest(l, dd_group, ta_group, new_linear_relation)
+    # two_sample_ttest(l, dd_group, ta_group, new_log_relation)
+    # two_sample_ttest(l, dd_group, ta_group, new_linear_relation)
 
     # linear_contrast1 = ft.partial(
     #     view_number_contrast, l, run=1, contrast=linear_relation
@@ -532,41 +683,178 @@ if __name__ == "__main__":
     # linear1 = list(map(linear_contrast1, groups))
     # linear2 = list(map(linear_contrast2, groups))
 
-    linear_classifier = ft.partial(
-        classify_contrast,
-        l,
-        algorithm="svm",
-        p_value=0.001,
-        n_folds=7,
-        algo_args={"kernel": "linear"},
-    )
-
-    linear_classifier(dd_group, ta_group, new_log_relation)
-    linear_classifier(dd_group, ta_group, new_linear_relation)
-    # 0.36 whole brain n_folds 3
-    # 0.69 at mask 0.001 n_folds 3
-    # 0.56 at mask 0.001 n_folds 5 log
-    # 0.58 at mask 0.001 n_folds 7 log
-    # 0.72 at mask 0.01 n_folds 3
-    # 0.68 at mask 0.05 n_folds 3
-    # 0.74 at mask 0.01 n_folds 4
-    # 0.82 at mask 0.01 n_folds 5
-    # 0.84 at mask 0.05 n_folds 5
-    # 0.74 at mask 0.05 n_folds 7 log
-    # 0.82 at mask 0.1 n_folds 5
-    # 0.83 at mask 0.01 n_folds 7
-    # 0.79 at mask 0.005 n_folds 7
-    # 0.67 at mask 0.005 n_folds 7 log
-    # 0.82 at mask 0.01 n_folds 10
-    # 0.72 at mask 0.01 n_folds 10
-
-    # my_ttest(rev_linear_relation, full_group)
-    # my_ttest(rev_linear_relation, dd_group)
-    # my_ttest(rev_linear_relation, ta_group)
-    # two_sample_ttest(l, dd_group, ta_group, rev_linear_relation)
-
-    # linear_searchlight = ft.partial(
-    #     searchlight, l, algorithm="svm", algo_args={"kernel": "linear"}
+    # linear_classifier = ft.partial(
+    #     classify_contrast,
+    #     l,
+    #     algorithm="svm",
+    #     p_value=0.001,
+    #     n_folds=7,
+    #     algo_args={"kernel": "linear"},
     # )
 
-    # linear_searchlight(dd_group, ta_group, linear_relation)
+    # data = linear_classifier(dd_group, ta_group, linear_relation)
+
+    # stats = data.predict(
+    #     algorithm="svm",
+    #     cv_dict={"type": "kfolds", "n_folds": 7, "n": len(data.Y)},
+    #     plot=False,
+    #     **{"kernel": "linear"},
+    # )
+    # print(stats)
+
+    # result1 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=20,
+    #     samples=10,
+    #     rd_seed=56,
+    #     n_folds=7,
+    #     p_value=0.01,
+    # )
+    # # mcr_xval = list(map(lambda x: x["stats"]["mcr_xval"], result))
+    # # print(mcr_xval)
+
+    # result2 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=15,
+    #     samples=10,
+    #     rd_seed=43,
+    #     n_folds=7,
+    #     p_value=0.005,
+    # )
+    # result3 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=15,
+    #     samples=10,
+    #     rd_seed=42,
+    #     n_folds=7,
+    #     p_value=0.01,
+    # )
+
+    # result4 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=15,
+    #     samples=10,
+    #     rd_seed=39,
+    #     n_folds=7,
+    #     p_value=0.05,
+    # )
+
+    # result5 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=15,
+    #     samples=10,
+    #     rd_seed=13,
+    #     n_folds=5,
+    #     p_value=0.01,
+    # )
+
+    # result5 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=12,
+    #     samples=10,
+    #     rd_seed=95,
+    #     n_folds=7,
+    #     p_value=0.005,
+    # )
+
+    # result6 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=12,
+    #     samples=10,
+    #     rd_seed=15,
+    #     n_folds=7,
+    #     p_value=0.01,
+    # )
+
+    # results = [result1, result2, result3, result4, result5, result6]
+    # mcr_xval = list(map(lambda x: x["stats"]["mcr_xval"], result))
+
+    # mcr_xvals = list(
+    #     map(lambda x: list(map(lambda y: y["stats"]["mcr_xval"], x)), results)
+    # )
+    # print(mcr_xvals)
+
+    # [[0.58, 0.54, 0.5, 0.58, 0.5, 0.56, 0.48, 0.56, 0.48, 0.48],
+    # [0.5428571428571428, 0.5571428571428572, 0.5, 0.42857142857142855, 0.4857142857142857, 0.44285714285714284, 0.4857142857142857, 0.4857142857142857, 0.45714285714285713, 0.5714285714285714],
+    # [0.5285714285714286, 0.45714285714285713, 0.4714285714285714, 0.4142857142857143, 0.5, 0.4142857142857143, 0.4142857142857143, 0.6, 0.38571428571428573, 0.44285714285714284],
+    # [0.4142857142857143, 0.38571428571428573, 0.5142857142857142, 0.5142857142857142, 0.4714285714285714, 0.38571428571428573, 0.5, 0.35714285714285715, 0.44285714285714284, 0.5428571428571428],
+    # [0.43902439024390244, 0.5609756097560976, 0.45121951219512196, 0.36585365853658536, 0.45121951219512196, 0.5365853658536586, 0.5121951219512195, 0.5, 0.4268292682926829, 0.4146341463414634],
+    # [0.4146341463414634, 0.524390243902439, 0.45121951219512196, 0.3780487804878049, 0.4268292682926829, 0.524390243902439, 0.5121951219512195, 0.36585365853658536, 0.4878048780487805, 0.4268292682926829]]
+
+    # avg_mcr_xvals = list(map(lambda x: sum(x) / len(x), mcr_xvals))
+    # print(avg_mcr_xvals)
+
+    # [0.5260000000000001, 0.4957142857142857, 0.4628571428571429, 0.45285714285714285, 0.46585365853658545, 0.4512195121951219]
+    # result7 = run_grouped_classify(
+    #     l,
+    #     dd_group,
+    #     ta_group,
+    #     linear_relation,
+    #     mask_sample_size=12,
+    #     samples=10,
+    #     rd_seed=10,
+    #     n_folds=7,
+    #     p_value=0.05,
+    # )
+
+# result8 = run_grouped_classify(
+#     l,
+#     dd_group,
+#     ta_group,
+#     linear_relation,
+#     mask_sample_size=12,
+#     samples=10,
+#     rd_seed=14,
+#     n_folds=5,
+#     p_value=0.01,
+# )
+
+# linear_classifier(dd_group, ta_group, new_linear_relation)
+# 0.36 whole brain n_folds 3
+# 0.69 at mask 0.001 n_folds 3
+# 0.56 at mask 0.001 n_folds 5 log
+# 0.58 at mask 0.001 n_folds 7 log
+# 0.72 at mask 0.01 n_folds 3
+# 0.68 at mask 0.05 n_folds 3
+# 0.74 at mask 0.01 n_folds 4
+# 0.82 at mask 0.01 n_folds 5
+# 0.84 at mask 0.05 n_folds 5
+# 0.74 at mask 0.05 n_folds 7 log
+# 0.82 at mask 0.1 n_folds 5
+# 0.83 at mask 0.01 n_folds 7
+# 0.79 at mask 0.005 n_folds 7
+# 0.67 at mask 0.005 n_folds 7 log
+# 0.82 at mask 0.01 n_folds 10
+# 0.72 at mask 0.01 n_folds 10
+
+# my_ttest(rev_linear_relation, full_group)
+# my_ttest(rev_linear_relation, dd_group)
+# my_ttest(rev_linear_relation, ta_group)
+# two_sample_ttest(l, dd_group, ta_group, rev_linear_relation)
+
+# linear_searchlight = ft.partial(
+#     searchlight, l, algorithm="svm", algo_args={"kernel": "linear"}
+# )
+
+# linear_searchlight(dd_group, ta_group, linear_relation)

@@ -68,8 +68,7 @@ def number_ttest(
     results_dir="../results",
 ):
     extracted = extract_betas_by_label(data, number)
-    th_method = list(th_param.keys())[0]
-    th_value = th_param[th_method]
+    th_method, th_value = list(th_param.items())[0]
 
     res = extracted.ttest(threshold_dict=th_param)
     # print(res)
