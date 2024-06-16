@@ -251,23 +251,27 @@ A project exploring number and algebra representations in the human brain using 
 - [X] refactor! first collect what I've saved before, then refactor data loader
 - [X] find metric for it
 
-** Final Final Stack
+** Final-Final Stack
 - [ ] finish draft (try hit 15 pgs) (an addition of 6 pages)
 - [ ] chores
-- [ ] acknoledgements
+- [ ] acknowledgements
 - [X] organize todo
-- [ ] add results (+1)
-- [ ] try listing t-values, examine statistical significance of svm study
-- [ ] add methods (+2)
-- [ ] explain maths of methods used (ttest, two leveled GLM equations, mvpa)
-- [ ] add pipeline figure
-- [ ] add experiment modality figure (dataset explanation)
-- [ ] add intro (+2)
-- [ ] add fmri, neuroimaging part (bold, etc)
-- [ ] add figures in intro (weber's law, etc)
-- [ ] expand and explain tcm
-- [ ] expand intro of intro (big to small)
+
+- [X] add intro (+2) (midnight)
+- [X] expand intro of intro (big to small)
+- [X] expand and explain tcm (0.5h)
+- [X] add figures in intro (weber's law, etc) (1h)
 - [X] chores (citations)
+- [X] add fmri, neuroimaging part (bold, etc) (0.5h)
+
+- [X] add methods (+2) (Afternoon)
+- [X] add experiment modality figure (dataset explanation)
+- [X] add pipeline figure (1h)
+- [X] explain maths of methods used (ttest, two leveled GLM equations, mvpa) (1h)
+
+- [X] add results (+1) (night)
+- [X] try listing t-values
+- [X] examine statistical significance of svm study (1h)
 
 * Notes
 ** Intro

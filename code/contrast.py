@@ -7,6 +7,8 @@ from math import log
 from random import sample
 from random import seed
 from os import makedirs
+from sklearn.model_selection import StratifiedKFold, permutation_test_score
+from sklearn.svm import SVC
 
 import functools as ft
 
@@ -87,7 +89,7 @@ def view_number_contrast(
         results_dir,
         f"{group_desc}_run-{run}_{contrast['name']}_contrasts.pkl",
     )
-    if os.path.exists(path_name):
+    if os.path.exists(path_name) and False:
         print("Loading contrasts for", contrast["name"])
         with open(path_name, "rb") as f:
             contrasts = pickle.load(f)
@@ -345,64 +347,115 @@ def grouped_classify(
     results_dir="../results/grouped_classifier",
 ):
     seed(sd)
-    path_name = os.path.join(
+    new_path_name = os.path.join(
         results_dir,
-        f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_classifier.pkl",
+        f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_permutation.pkl",
     )
-    if os.path.exists(path_name):
-        with open(path_name, "rb") as f:
+    # path_name = os.path.join(
+    #     results_dir,
+    #     f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_classifier.pkl",
+    # )
+    data_name = os.path.join(
+        results_dir,
+        f"{g1['desc']}_{g2['desc']}_{contrast['name']}_data.pkl",
+    )
+    if os.path.exists(new_path_name):
+        with open(new_path_name, "rb") as f:
             result = pickle.load(f)
             return result
 
+    elif os.path.exists(data_name):
+        with open(data_name, "rb") as f:
+            data = pickle.load(f)
+            mask_g1 = sample(g1["subjs"], mask_sample_size)
+            mask_g2 = sample(g2["subjs"], mask_sample_size)
+
     else:
-        pass
-    mask_g1 = sample(g1["subjs"], mask_sample_size)
-    mask_g2 = sample(g2["subjs"], mask_sample_size)
-    print(mask_g1)
-    svm_g1 = [x for x in g1["subjs"] if x not in mask_g1]
-    svm_g2 = [x for x in g2["subjs"] if x not in mask_g2]
+        mask_g1 = sample(g1["subjs"], mask_sample_size)
+        mask_g2 = sample(g2["subjs"], mask_sample_size)
+        print(mask_g1)
+        svm_g1 = [x for x in g1["subjs"] if x not in mask_g1]
+        svm_g2 = [x for x in g2["subjs"] if x not in mask_g2]
 
-    mask_g1 = {"desc": "mask_g1", "subjs": mask_g1}
-    mask_g2 = {"desc": "mask_g2", "subjs": mask_g2}
-    svm_g1 = {"desc": g1["desc"] + "_svm", "subjs": svm_g1}
-    svm_g2 = {"desc": g2["desc"] + "_svm", "subjs": svm_g2}
+        mask_g1 = {"desc": "mask_g1", "subjs": mask_g1}
+        mask_g2 = {"desc": "mask_g2", "subjs": mask_g2}
+        svm_g1 = {"desc": g1["desc"] + "_svm", "subjs": svm_g1}
+        svm_g2 = {"desc": g2["desc"] + "_svm", "subjs": svm_g2}
 
-    data = two_sample_ttest(l, svm_g1, svm_g2, contrast, silent=True)
-    mask_dat = two_sample_ttest(l, mask_g1, mask_g2, contrast, silent=False)
+        data = two_sample_ttest(l, svm_g1, svm_g2, contrast, silent=True)
+        mask_dat = two_sample_ttest(l, mask_g1, mask_g2, contrast, silent=False)
 
-    stats = mask_dat.regress()
+        stats = mask_dat.regress()
 
-    # Threshold the t-values by p-value
-    t_map = stats["t"][1]  # t-map for the group difference
-    p_map = stats["p"][1]  # p-map for the group difference
-    thresholded_t_map = threshold(t_map, p_map, p_value)
+        # Threshold the t-values by p-value
+        t_map = stats["t"][1]  # t-map for the group difference
+        p_map = stats["p"][1]  # p-map for the group difference
+        thresholded_t_map = threshold(t_map, p_map, p_value)
 
-    # switch to nifti
-    mask = thresholded_t_map.to_nifti()
-    # turn into true/false
-    bool_mask = mask.get_fdata() != 0
-    mask = nib.Nifti1Image(bool_mask.astype(np.float32), affine=mask.affine)
+        # switch to nifti
+        mask = thresholded_t_map.to_nifti()
+        # turn into true/false
+        bool_mask = mask.get_fdata() != 0
+        mask = nib.Nifti1Image(bool_mask.astype(np.float32), affine=mask.affine)
 
-    # visualize the mask
-    thresholded_t_map.plot(view="mni", colorbar=True)
+        # visualize the mask
+        thresholded_t_map.plot(view="mni", colorbar=True)
+        plt.savefig(
+            os.path.join(
+                results_dir,
+                f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_p-{p_value}_n-{n_folds}_mask.png",
+            )
+        )
+        plt.close()
+        data = data.apply_mask(mask)
+        with open(data_name, "wb") as f:
+            pickle.dump(data, f)
+    print("Length of data is " + str(len(data.Y)))
+
+    clf = SVC(kernel="linear", random_state=7)
+    cv = StratifiedKFold(n_folds, shuffle=True, random_state=0)
+
+    score, perm_scores, pvalue = permutation_test_score(
+        clf, data.data, data.Y, scoring="accuracy", cv=cv, n_permutations=1000
+    )
+
+    fig, ax = plt.subplots()
+
+    ax.hist(perm_scores, bins=20, density=True)
+    ax.axvline(score, ls="--", color="r")
+    score_label = (
+        f"Cross Validation Score \n data: {score:.2f}\n(p-value: {pvalue:.3f})"
+    )
+    ax.text(0.3, 4.5, score_label, fontsize=9)
+    ax.set_xlabel("Accuracy score")
+    _ = ax.set_ylabel("Probability density")
+
     plt.savefig(
         os.path.join(
             results_dir,
-            f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_p-{p_value}_n-{n_folds}_mask.png",
+            f"{g1['desc']}_{g2['desc']}_{contrast['name']}_{algo_args['kernel']}_p-{p_value}_n-{n_folds}_permutation.png",
         )
     )
     plt.close()
-    data = data.apply_mask(mask)
-    print("Length of data is " + str(len(data.Y)))
 
-    stats = data.predict(
-        algorithm=algorithm,
-        cv_dict={"type": "kfolds", "n_folds": n_folds, "n": len(data.Y)},
-        plot=False,
-        **algo_args,
-    )
+    stats = {
+        "score": score,
+        "perm_scores": perm_scores,
+        "pvalue": pvalue,
+    }
+
+    # stats = data.predict(
+    #     algorithm=algorithm,
+    #     cv_dict={"type": "kfolds", "n_folds": n_folds, "n": len(data.Y)},
+    #     plot=False,
+    #     **algo_args,
+    # )
+
     result = {"mask_group": [mask_g1, mask_g2], "stats": stats}
-    with open(path_name, "wb") as f:
+    # with open(path_name, "wb") as f:
+    #     pickle.dump(result, f)
+
+    with open(new_path_name, "wb") as f:
         pickle.dump(result, f)
 
     return result
@@ -428,7 +481,7 @@ def run_grouped_classify(
         results_dir,
         "f{g1['desc']}_{g2['desc']}_{contrast['name']}_n-{n_folds}_p-{p_value}_classifier.pkl",
     )
-    if os.path.exists(path_name):
+    if os.path.exists(path_name) and False:
         with open(path_name, "rb") as f:
             results = pickle.load(f)
         return results
@@ -651,18 +704,18 @@ if __name__ == "__main__":
 
     # list(map(num_tsttest, num_contrasts))
 
-    my_ttest = ft.partial(
-        one_group_significance,
-        l,
-        threshold_dict={"unc": 0.001},
-        results_dir="../results/group_contrasts/new",
-    )
+    # my_ttest = ft.partial(
+    #     one_group_significance,
+    #     l,
+    #     threshold_dict={"unc": 0.001},
+    #     results_dir="../results/group_contrasts/new",
+    # )
     # my_ttest(new_log_relation, full_group)
     # my_ttest(new_log_relation, dd_group)
     # my_ttest(new_log_relation, ta_group)
-    my_ttest(linear_relation, full_group)
-    my_ttest(linear_relation, dd_group)
-    my_ttest(linear_relation, ta_group)
+    # my_ttest(linear_relation, full_group)
+    # my_ttest(linear_relation, dd_group)
+    # my_ttest(linear_relation, ta_group)
     # my_ttest(even_odd, full_group)
     # my_ttest(even_odd, dd_group)
     # my_ttest(even_odd, ta_group)
@@ -702,19 +755,24 @@ if __name__ == "__main__":
     # )
     # print(stats)
 
-    # result1 = run_grouped_classify(
-    #     l,
-    #     dd_group,
-    #     ta_group,
-    #     linear_relation,
-    #     mask_sample_size=20,
-    #     samples=10,
-    #     rd_seed=56,
-    #     n_folds=7,
-    #     p_value=0.01,
-    # )
-    # # mcr_xval = list(map(lambda x: x["stats"]["mcr_xval"], result))
-    # # print(mcr_xval)
+    result1 = run_grouped_classify(
+        l,
+        dd_group,
+        ta_group,
+        linear_relation,
+        mask_sample_size=20,
+        samples=10,
+        rd_seed=56,
+        n_folds=7,
+        p_value=0.01,
+    )
+    pvals = list(map(lambda x: x["stats"]["pvalue"], result1))
+    print(pvals)
+    # [0.11488511488511488, 0.4905094905094905, 0.36163836163836166, 0.1918081918081918, 0.2017982017982018, 0.1108891108891109, 0.08091908091908091, 0.23476523476523475, 0.4095904095904096, 0.43656343656343655]
+
+    scores = list(map(lambda x: x["stats"]["score"], result1))
+    print(scores)
+    # [0.6428571428571429, 0.5612244897959183, 0.5765306122448981, 0.6198979591836735, 0.6173469387755102, 0.6403061224489797, 0.6607142857142857, 0.6173469387755102, 0.5637755102040816, 0.5561224489795917]
 
     # result2 = run_grouped_classify(
     #     l,
@@ -788,12 +846,12 @@ if __name__ == "__main__":
     # )
 
     # results = [result1, result2, result3, result4, result5, result6]
-    # mcr_xval = list(map(lambda x: x["stats"]["mcr_xval"], result))
 
     # mcr_xvals = list(
     #     map(lambda x: list(map(lambda y: y["stats"]["mcr_xval"], x)), results)
     # )
-    # print(mcr_xvals)
+    # avg_mcr = list(map(lambda x: sum(x) / len(x), mcr_xvals))
+    # print(avg_mcr)
 
     # [[0.58, 0.54, 0.5, 0.58, 0.5, 0.56, 0.48, 0.56, 0.48, 0.48],
     # [0.5428571428571428, 0.5571428571428572, 0.5, 0.42857142857142855, 0.4857142857142857, 0.44285714285714284, 0.4857142857142857, 0.4857142857142857, 0.45714285714285713, 0.5714285714285714],
